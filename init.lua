@@ -1,6 +1,10 @@
 vim.g.mapleader = ' '
-vim.g.colorscheme = "catppuccin"
+vim.g.colorscheme = "tokyonight"
+vim.opt.mousemoveevent = true
+-- For better colour
+vim.opt.termguicolors = true
 
+require("lib.misc")
 require("config.lazy")
 require("config.keymaps")
 

@@ -1,17 +1,16 @@
-local opts = function(desc)
-    return { desc = desc, silent = true }
-end
-
 local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>ff', builtin.find_files, opts("Find files"))
-vim.keymap.set('n', '<leader>fg', builtin.live_grep, opts("Live grep"))
-vim.keymap.set('n', '<leader>fb', builtin.buffers, opts("Buffers"))
-vim.keymap.set('n', '<leader>fh', builtin.help_tags, opts("Help Tags"))
+
+vim.keymap.set('n', '<leader>ff', builtin.find_files, key_opts("Find files"))
+vim.keymap.set('n', '<leader>fg', builtin.live_grep, key_opts("Live grep"))
+vim.keymap.set('n', '<leader>fb', builtin.buffers, key_opts("Buffers"))
+vim.keymap.set('n', '<leader>fh', builtin.help_tags, key_opts("Help Tags"))
 
 local actions = require('telescope.actions')
 local telescope = require('telescope')
 
 return {
+    -- Telescope configuration
+    
     "nvim-telescope/telescope.nvim",
     dependencies = {
         "nvim-lua/plenary.nvim",
@@ -19,18 +18,25 @@ return {
         "nvim-telescope/telescope-fzy-native.nvim",
         "sharkdp/fd"
     },
-    opt = function()
+    event = "VimEnter",
+    opts = {
         defaults = {
             mappings = {
                 i = {
                     ["<esc>"] = actions.close,
-                    ["<C-h>"] = actions.which_key
+                    ["<C-h>"] = actions.which_key,
                 },
             },
-        }
-    end,
-    config = function()
-        telescope.setup()
+        },
+        pickers = {
+            find_files = {
+                theme = "dropdown",
+            },
+        },
+    },
+    config = function(_, opts)
+        telescope.setup(opts)
         telescope.load_extension('fzy_native')
     end
+
 }

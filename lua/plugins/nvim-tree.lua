@@ -1,7 +1,6 @@
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
--- For better colour
-vim.opt.termguicolors = true
+
 
 -- Open or close the tree.
 vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { silent = true })
