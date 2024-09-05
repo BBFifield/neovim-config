@@ -1,7 +1,4 @@
-vim.keymap.set('n', '<leader>a', ':Alpha<CR>', { silent = true })
-
 local builtin = require('telescope.builtin')
-
 
 return {
     'goolord/alpha-nvim',

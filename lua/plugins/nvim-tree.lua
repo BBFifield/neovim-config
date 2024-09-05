@@ -1,10 +1,6 @@
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
-
--- Open or close the tree.
-vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { silent = true })
-
 -- Open in current window
 local function open_nvim_tree(data)
   -- buffer is a directory
@@ -23,13 +19,13 @@ vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = open_nvim_tree })
 return {
     "nvim-tree/nvim-tree.lua",
     version = "*",
-    lazy = false,
     dependencies = {
       "nvim-tree/nvim-web-devicons",
       "antosha417/nvim-lsp-file-operations",
     },
-    opts = function()
-      return {
+    -- Will only load plugin when this command is executed
+    cmd = { "NvimTreeToggle" },
+    opts = {
         sort = {
           sorter = "case_sensitive",
         },
@@ -42,7 +38,7 @@ return {
         filters = {
           dotfiles = true,
         },
-      }
-    end,
+      },
+    
   }
   
