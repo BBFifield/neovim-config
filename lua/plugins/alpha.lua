@@ -13,7 +13,7 @@ return {
             dashboard.button("f", " " .. " Find file",       builtin.find_files),
             dashboard.button("r", " " .. " Recent files",    builtin.oldfiles),
             dashboard.button("g", " " .. " Find text",       builtin.live_grep),
-            --dashboard.button("Z", " " .. " Open Directories", "<cmd> lua require('telescope').extensions.zoxide.list() <cr>"),
+            dashboard.button("z", " " .. " Open Directories", "<cmd> lua require('telescope').extensions.zoxide.list() <cr>"),
             --dashboard.button("c", " " .. " Config",          "<cmd> lua require('lazyvim.util').telescope.config_files()() <cr>"),
             --dashboard.button("s", " " .. " Restore Session", [[<cmd> lua require("persistence").load() <cr>]]),
             --dashboard.button("x", " " .. " Lazy Extras",     "<cmd> LazyExtras <cr>"),

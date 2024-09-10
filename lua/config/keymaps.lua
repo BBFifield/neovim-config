@@ -1,13 +1,13 @@
 -- Move text left
-vim.api.nvim_set_keymap('n', '<M-h>', '<<', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('v', '<M-h>', '<gv', { noremap = true, silent = true })
+vim.keymap.set('n', '<M-h>', '<<', { noremap = true, silent = true })
+vim.keymap.set('v', '<M-h>', '<gv', { noremap = true, silent = true })
 -- Move text right
-vim.api.nvim_set_keymap('n', '<M-l>', '>>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('v', '<M-l>', '>gv', { noremap = true, silent = true })
+vim.keymap.set('n', '<M-l>', '>>', { noremap = true, silent = true })
+vim.keymap.set('v', '<M-l>', '>gv', { noremap = true, silent = true })
 
 -- Yank to system clipboard
-vim.api.nvim_set_keymap('n', 'y', '"+y', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('v', 'y', '"+y', { noremap = true, silent = true })
+vim.keymap.set('n', 'y', '"+y', { noremap = true, silent = true })
+vim.keymap.set('v', 'y', '"+y', { noremap = true, silent = true })
 
 vim.opt.clipboard:append('unnamed')
 if vim.fn.executable("wl-copy") == 1 then
@@ -24,3 +24,5 @@ if vim.fn.executable("wl-copy") == 1 then
         cache_enabled = true,
     }
 end
+
+
