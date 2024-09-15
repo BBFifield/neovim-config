@@ -6,7 +6,7 @@ return {
         navic.setup({
             highlight = true,
             click = true,
-            separator = '  ',
+            separator = '  ',
         })
     end
 }

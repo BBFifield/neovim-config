@@ -5,10 +5,23 @@ vim.keymap.set('v', '<M-h>', '<gv', { noremap = true, silent = true })
 vim.keymap.set('n', '<M-l>', '>>', { noremap = true, silent = true })
 vim.keymap.set('v', '<M-l>', '>gv', { noremap = true, silent = true })
 
--- Yank to system clipboard
+-- Yank to system clipboard register
 vim.keymap.set('n', 'y', '"+y', { noremap = true, silent = true })
 vim.keymap.set('v', 'y', '"+y', { noremap = true, silent = true })
 
+-- Yank to primary selection register
+vim.keymap.set('n', 'Y', '"*y', { noremap = true, silent = true })
+vim.keymap.set('v', 'Y', '"*y', { noremap = true, silent = true })
+
+-- Paste from system clipboard register
+vim.keymap.set('n', 'p', '"+p', { noremap = true, silent = true })
+vim.keymap.set('v', 'p', '"+p', { noremap = true, silent = true })
+
+-- Paste from primary selection register
+vim.keymap.set('n', 'P', '"*p', { noremap = true, silent = true })
+vim.keymap.set('v', 'P', '"*p', { noremap = true, silent = true })
+
+-- Map registers to wl-clipboard commands
 vim.opt.clipboard:append('unnamed')
 if vim.fn.executable("wl-copy") == 1 then
     vim.g.clipboard = {
