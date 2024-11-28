@@ -77,6 +77,15 @@ return {
 					Lua = {},
 				},
 			})
+			lspconfig.rust_analyzer.setup({
+				settings = {
+					["rust-analyzer"] = {
+						diagnostics = {
+							enable = false,
+						},
+					},
+				},
+			})
 
 			lspconfig.nil_ls.setup({})
 		end,
@@ -97,6 +106,12 @@ return {
 				lua = { "stylua" },
 				css = { "prettierd" },
 				scss = { "prettierd" },
+				rs = { "rustfmt" },
+			},
+			format_on_save = {
+				-- I recommend these options. See :help conform.format for details.
+				lsp_format = "fallback",
+				timeout_ms = 5000,
 			},
 		},
 		config = function(_, opts)

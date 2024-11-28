@@ -9,7 +9,7 @@ local create_keymaps = function(maps)
 	end
 end
 
-local create_reg_keymaps = function()
+local create_register_keymaps = function()
 	local opts = { silent = true }
 	for i = string.byte("a"), string.byte("z") do
 		local letterReg = string.char(i)
@@ -39,10 +39,12 @@ local keymaps = {
 	{ "n", "<leader>bn", ":bn<CR>", { desc = "Next", silent = true } },
 	{ "n", "<leader>bb", ":bp<CR>", { desc = "Prev", silent = true } },
 	{ "n", "<leader>bd", ":bdelete<CR>", { desc = "Close", silent = true } },
+	{ "i", "<M-4>", ":normal $|normal a", { silent = true } }, --Move to end of line in insert mode
+	{ "i", "<M-5>", ":normal %|normal a", { silent = true } }, --Jump to matched pair
 }
 
 create_keymaps(keymaps)
-create_reg_keymaps()
+create_register_keymaps()
 
 -- Map registers to wl-clipboard commands
 vim.opt.clipboard:append("unnamed")
