@@ -16,7 +16,7 @@ in
       };
     };
     config = mkIf cfg.enable {
-      home.packages = [
+      home.packages = with pkgs; [
         wl-clipboard # For system clipboard capabilities
         ripgrep # For BurntSushi/ripgrep
         gcc # For installing treesitter parsers
