@@ -1,9 +1,31 @@
 vim.g.mapleader = " "
-vim.g.tinted_colorspace = 256
-vim.g.tinted_background_transparent = 1
-vim.g.colorscheme = "base16-catppuccin-frappe"
+vim.g.is_base16 = true
+if vim.g.is_base16 then
+	local settings_path = vim.fn.expand("~/.config/tintednix/settings.txt")
+	local config = {}
+	local file = io.open(settings_path, "r")
+	if file then
+		for line in file:lines() do
+			for key, value in string.gmatch(line, "([%a_]+)=([%w%p]+)") do
+				config[key] = value
+			end
+		end
+		file:close()
+	else
+		vim.g.colorscheme = "base16-catppuccin-frappe"
+	end
+	if config.current_colorscheme then
+		vim.g.colorscheme = "base16-" .. config.current_colorscheme
+	else
+		vim.g.colorscheme = "base16-catppuccin-frappe"
+	end
+else
+	vim.g.colorscheme = "catppuccin-mocha"
+end
+
+vim.g.mapleader = " "
 vim.opt.mousemoveevent = true
-vim.opt.termguicolors = false
+vim.opt.termguicolors = true
 
 vim.opt.tabstop = 2 -- Number of spaces that a <Tab> in the file counts for
 vim.opt.shiftwidth = 2 -- Number of spaces to use for each step of (auto)indent
@@ -18,8 +40,8 @@ NewfieVim_object = require("config.newfievim")
 
 local opts = {
 	plugin_list = {
+		base16_nvim = { "RRethy/base16-nvim", enabled = vim.g.is_base16 },
 		alpha = { "goolord/alpha-nvim", enabled = true },
-		bufferline = { "akinsho/bufferline.nvim", enabled = false },
 		dropbar = { "Bekaboo/dropbar.nvim", enabled = false },
 		fidget = { "j-hui/fidget.nvim", enabled = true },
 		indent_blankline = { "lukas-reineke/indent-blankline.nvim", enabled = true },
@@ -31,9 +53,7 @@ local opts = {
 		telescope = { "nvim-telescope/telescope.nvim", enabled = true },
 		tfm = { "rolv-apneseth/tfm.nvim", enabled = true },
 		which_key = { "folke/which-key.nvim", enabled = true },
-		barbar = { "romgrk/barbar.nvim", enabled = false },
-		base16_nvim = { "RRethy/base16-nvim", enabled = false },
-		tinted_vim = { "tinted-theming/tinted-vim", enabled = true },
+		cokeline = { "willothy/nvim-cokeline", enabled = true },
 	},
 }
 NewfieVim = NewfieVim_object:new(opts) -- Create a new NewfieVim object
@@ -44,5 +64,3 @@ require("config.keymaps")
 vim.cmd.colorscheme(vim.g.colorscheme)
 vim.wo.number = true
 vim.wo.cursorline = true
-
-require("colorizer").setup()

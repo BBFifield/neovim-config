@@ -15,10 +15,10 @@ in
       };
     };
     config = mkIf cfg.enable {
-      home.packages = [
-        pkgs.wl-clipboard # For system clipboard capabilities
-        pkgs.ripgrep # For BurntSushi/ripgrep
-        pkgs.gcc # For installing treesitter parsers
+      home.packages = with pkgs; [
+        wl-clipboard # For system clipboard capabilities
+        ripgrep # For BurntSushi/ripgrep
+        gcc # For installing treesitter parsers
       ];
 
       # So the entire folder isn't linked to the nix store. This allows you add or replace individual files for testing without having to rebuild all the time.
