@@ -167,7 +167,7 @@ return {
 
 		-- Fetch colors for custom theme
 		local theme
-		if vim.g.base16 then
+		if vim.g.is_base16 then
 			local colors = require("base16-colorscheme").colors
 			local custom_base16 = {
 				normal = {
