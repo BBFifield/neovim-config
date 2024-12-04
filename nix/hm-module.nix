@@ -8,10 +8,11 @@ self: {
 in
   with lib; {
     options.hm.neovimConfig = {
-      enable = mkEnableOption "Enable this Neovim configuration.";
+      enable = mkEnableOption "Install the accompanying Neovim configuration to ~/.config/nvim";
       config = lib.mkOption {
         type = lib.types.path;
         default = ../nvim;
+        description = ''A Neovim configuration directory to install to ~/.config/nvim'';
       };
     };
     config = mkIf cfg.enable {
