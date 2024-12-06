@@ -23,82 +23,11 @@ return {
 	config = function(_, opts)
 		vim.cmd.colorscheme(vim.g.colorscheme) -- Ensure the colorscheme is applied early
 
-		-- Custom buffers extension
-		local custom_buffers = require("lualine.components.buffers"):extend()
-		local custom_buffers_buffer = require("lualine.components.buffers.buffer"):extend()
-
-		function custom_buffers:init(options)
-			custom_buffers.super.init(self, options)
-			self.options = vim.tbl_deep_extend("force", self.options, { options })
-			self.highlights = {
-				active = self:create_hl(self.options.buffers_color.active, "active"),
-				inactive = self:create_hl(self.options.buffers_color.inactive, "inactive"),
-			}
-		end
-
-		function custom_buffers:new_buffer(bufnr, buf_index)
-			bufnr = bufnr or vim.api.nvim_get_current_buf()
-			buf_index = buf_index or ""
-			return custom_buffers_buffer:new({
-				bufnr = bufnr,
-				buf_index = buf_index,
-				options = self.options,
-				highlights = self.highlights,
-			})
-		end
-
-		function custom_buffers_buffer:init(options)
-			custom_buffers_buffer.super.init(self, options)
-		end
-
-		function custom_buffers_buffer:name()
-			local name = custom_buffers_buffer.super.name(self)
-
-			local general = vim.api.nvim_get_hl(0, { name = "lualine_a_replace" })
-			local active = vim.api.nvim_get_hl(0, { name = self.options.buffers_color.active })
-			local inactive = vim.api.nvim_get_hl(0, { name = self.options.buffers_color.inactive })
-			vim.api.nvim_set_hl(
-				0,
-				"active_modified",
-				{ fg = general.bg, bg = active.bg, ctermfg = general.ctermbg, ctermbg = active.ctermbg }
-			)
-			vim.api.nvim_set_hl(
-				0,
-				"inactive_modified",
-				{ fg = inactive.fg, bg = inactive.bg, ctermfg = inactive.ctermfg, ctermbg = inactive.ctermbg }
-			)
-			vim.api.nvim_set_hl(
-				0,
-				"separator",
-				{ fg = active.bg, bg = inactive.bg, ctermfg = active.ctermbg, ctermbg = inactive.ctermbg }
-			)
-
-			if self:is_current() and vim.api.nvim_get_option_value("modified", { buf = self.bufnr }) then
-				name = name .. "%#active_modified# ●%*"
-			elseif not self:is_current() and vim.api.nvim_get_option_value("modified", { buf = self.bufnr }) then
-				name = name .. "%#inactive_modified# ○%*"
-			end
-			return name
-		end
-
-		function custom_buffers_buffer:separator_before()
-			if self.current then
-				return string.format("%%#separator# %s%%*", self.options.section_separators.right)
-			elseif self.aftercurrent then
-				return string.format("%%#separator#%s %%*", self.options.section_separators.left)
-			else
-				return string.format("%%#separator#%s%%*", self.options.component_separators.right)
-			end
-		end
-
 		-- Define and extend winbar
-		local navic
-		local barbecue
 		local winbar = {}
-		local navic_enabled = NewfieVim:get_plugin_info("navic").enabled
-		if navic_enabled then
-			navic = require("nvim-navic")
-			barbecue = require("barbecue.ui")
+		if NewfieVim:get_plugin_info("navic").enabled then
+			local navic = require("nvim-navic")
+			local barbecue = require("barbecue.ui")
 			winbar = {
 				winbar = {
 					lualine_c = {
@@ -116,13 +45,12 @@ return {
 		end
 
 		local tabline = {}
-		local cokeline_enabled = NewfieVim:get_plugin_info("cokeline").enabled
-		if cokeline_enabled ~= true then
+		if NewfieVim:get_plugin_info("lualine").enable_custom_buffers then
 			tabline = {
 				tabline = {
 					lualine_c = {
 						{
-							custom_buffers,
+							require("plugins.lualine.custom_buffers"),
 							show_filename_only = true,
 							hide_filename_extension = false,
 							show_modified_status = true,
@@ -167,29 +95,14 @@ return {
 
 		-- Fetch colors for custom theme
 		local theme
+		local colors = require("base16-colorscheme").colors
 		if vim.g.is_base16 then
-			local colors = require("base16-colorscheme").colors
-			local custom_base16 = {
-				normal = {
-					a = { fg = colors.base01, bg = colors.base0D, gui = "bold" },
-					b = { fg = colors.base0D, bg = colors.base01 },
-					c = { fg = colors.base03, bg = colors.base00 },
-				},
-				insert = { a = { fg = colors.base01, bg = colors.base0B, gui = "bold" } },
-				visual = { a = { fg = colors.base01, bg = colors.base0E, gui = "bold" } },
-				replace = { a = { fg = colors.base01, bg = colors.base08, gui = "bold" } },
-				inactive = {
-					a = { fg = colors.base0D, bg = colors.base01, gui = "bold" },
-					b = { fg = colors.base0D, bg = colors.base01 },
-					c = { fg = colors.base0D, bg = colors.base01 },
-				},
-			}
-			theme = custom_base16
+			theme = require("plugins.lualine.custom_base16")
 		else
 			theme = "auto"
 		end
 
-		require("lualine").setup(vim.tbl_deep_extend("keep", winbar, {
+		require("lualine").setup(vim.tbl_deep_extend("keep", winbar, tabline, {
 			options = {
 				icons_enabled = true,
 				theme = theme,
@@ -198,7 +111,14 @@ return {
 			},
 			sections = {
 				lualine_a = { { "mode", separator = { left = "", right = "" } } },
-				lualine_b = { { "branch", color = { fg = colors.base0E } } },
+				lualine_b = {
+					{
+						"branch",
+						color = { fg = colors.base0E },
+					},
+					"diff",
+					"diagnostics",
+				},
 				lualine_c = {},
 				lualine_x = {},
 				lualine_y = { "filetype", "encoding", "fileformat", "progress" },

@@ -50,7 +50,7 @@ return {
 									normal = {
 										a = { fg = colors.base01, bg = colors.base0D, gui = "bold" },
 										b = { fg = colors.base0D, bg = colors.base01 },
-										c = { fg = colors.base03, bg = colors.base00 },
+										c = { fg = colors.base03, bg = colors.base02 },
 									},
 									insert = { a = { fg = colors.base01, bg = colors.base0B, gui = "bold" } },
 									visual = { a = { fg = colors.base01, bg = colors.base0E, gui = "bold" } },
@@ -105,14 +105,27 @@ return {
 		end,
 	},
 
-	-- {
-	-- 	"rachartier/tiny-devicons-auto-colors.nvim",
-	-- 	dependencies = {
-	-- 		"nvim-tree/nvim-web-devicons",
-	-- 	},
-	-- 	event = "VeryLazy",
-	-- 	opts = { autoreload = true },
-	-- },
+	{
+		"rachartier/tiny-devicons-auto-colors.nvim",
+		dependencies = {
+			"nvim-tree/nvim-web-devicons",
+		},
+		event = "VeryLazy",
+		opts = {
+			autoreload = true,
+			factors = {
+				lightness = 1.75, -- Adjust the lightness factor.
+				chroma = 1, -- Adjust the chroma factor.
+				hue = 1.25, -- Adjust the hue factor.
+			},
+			precise_search = {
+				enabled = true,
+				iteration = 10, -- It goes hand in hand with 'precision'
+				precision = 20, -- The higher the precision, better the search is
+				threshold = 23, -- Threshold to consider a color as a match (larger is more permissive)
+			},
+		},
+	},
 	{
 		"NvChad/nvim-colorizer.lua",
 		event = "BufEnter",

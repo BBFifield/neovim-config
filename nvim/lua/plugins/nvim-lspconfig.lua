@@ -16,11 +16,7 @@ return {
 		},
 		config = function()
 			local lspconfig = require("lspconfig")
-			local navic
-			local navic_enabled = NewfieVim:get_plugin_info("navic").enabled
-			if navic_enabled then
-				navic = require("nvim-navic")
-			end
+			local navic_enabled, navic = pcall(require, "navic")
 
 			lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
 				capabilities = vim.tbl_deep_extend(
@@ -115,7 +111,6 @@ return {
 			},
 		},
 		config = function(_, opts)
-			NewfieVim:get_plugin_info("lsp_config")
 			require("conform").setup(opts)
 			wk.add({
 				{ "<leader>lr", "<cmd>lua vim.lsp.buf.format()<CR>", icon = "󰝔", desc = "Run formatter" },
