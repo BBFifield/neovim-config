@@ -28,16 +28,38 @@ return {
 		if NewfieVim:get_plugin_info("navic").enabled then
 			local navic = require("nvim-navic")
 			local barbecue = require("barbecue.ui")
+			local dropbar = require("dropbar")
 			winbar = {
 				winbar = {
 					lualine_c = {
+						{ "dropbar.get_dropbar_str()", separator = { left = "", right = "" }, color = nil },
+					},
+					-- 	-- {
+					-- 	-- 	function()
+					-- 	-- 		return navic.get_location()
+					-- 	-- 	end,
+					-- 	-- 	cond = function()
+					-- 	-- 		return navic.is_available()
+					-- 	-- 	end,
+					-- 	-- },
+					-- 	-- {
+					-- 	-- 	"navic",
+					-- 	-- 	color_correction = "dynamic",
+					-- 	-- },
+					-- 	{
+					-- 		function()
+					-- 			return barbecue.update() or ""
+					-- 		end,
+					-- 		cond = function()
+					-- 			return navic.is_available()
+					-- 		end,
+					-- 	},
+					-- },
+					lualine_x = {
 						{
-							function()
-								return barbecue.update() or ""
-							end,
-							cond = function()
-								return navic.is_available()
-							end,
+							"datetime",
+							separator = { left = "", right = "" },
+							style = "%H:%M",
 						},
 					},
 				},
@@ -96,13 +118,13 @@ return {
 		-- Fetch colors for custom theme
 		local theme
 		local colors = require("base16-colorscheme").colors
-		if vim.g.is_base16 then
+		if NewfieVim:get_plugin_info("base16_nvim").enabled then
 			theme = require("plugins.lualine.custom_base16")
 		else
 			theme = "auto"
 		end
 
-		require("lualine").setup(vim.tbl_deep_extend("keep", winbar, tabline, {
+		require("lualine").setup(vim.tbl_deep_extend("keep", winbar, {
 			options = {
 				icons_enabled = true,
 				theme = theme,
@@ -128,11 +150,19 @@ return {
 				lualine_a = {},
 				lualine_b = {},
 				lualine_c = {},
-				lualine_x = { "location" },
-				lualine_y = {},
-				lualine_z = {},
+				lualine_x = {},
+				lualine_y = {
+					"filename",
+					"filetype",
+				},
+				lualine_z = {
+					{
+						"location",
+						separator = { left = "", right = "" },
+					},
+				},
 			},
-			extensions = {},
+			extensions = { "lazy" },
 		}))
 	end,
 }

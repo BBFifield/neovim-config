@@ -9,6 +9,7 @@ return {
 				highlight = true,
 				click = true,
 				separator = "  ",
+				safe_output = true,
 				--	lazy_update_context = "true",
 			})
 		end,

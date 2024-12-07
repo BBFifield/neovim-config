@@ -69,6 +69,7 @@ return {
 	{
 		"rolv-apneseth/tfm.nvim",
 		lazy = false,
+		enabled = NewfieVim:get_plugin_info("tfm").enabled,
 		opts = {
 			file_manager = "yazi",
 			replace_netrw = true,
@@ -125,6 +126,26 @@ return {
 				{ "<leader>mt", ":TfmTabedit<CR>", desc = "New tab" },
 			})
 			require("tfm").setup(opts)
+		end,
+	},
+	{
+		"mikavilpas/yazi.nvim",
+		event = "VeryLazy",
+		opts = {
+			-- if you want to open yazi instead of netrw, see below for more info
+			open_for_directories = false,
+			keymaps = {
+				show_help = "<f1>",
+			},
+		},
+		config = function(_, opts)
+			wk.add({
+				{ "<leader>e", ":Yazi<CR>", icon = "󰙅", desc = "File Manager" },
+				{ "<leader>m", group = "Yazi", icon = "" },
+				--{ "<leader>mh", ":TfmSplit<CR>", icon = "", desc = "Horizontal split" },
+				--{ "<leader>mv", ":TfmVsplit<CR>", icon = "", desc = "Vertical split" },
+			})
+			require("yazi").setup(opts)
 		end,
 	},
 }

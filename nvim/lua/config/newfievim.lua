@@ -20,7 +20,7 @@ function NewfieVim:initialize_plugins()
 			prepared_list,
 			{ import = "plugins" },
 		},
-		ui = { size = { width = 1, height = 1 } },
+		ui = { size = { width = 0.8, height = 0.8 } },
 		install = { colorscheme = { vim.g.colorscheme } },
 		checker = { enabled = true }, -- automatically check for plugin updates
 	})

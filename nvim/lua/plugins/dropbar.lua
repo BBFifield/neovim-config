@@ -5,5 +5,14 @@ return {
 	dependencies = {
 		"nvim-telescope/telescope-fzf-native.nvim",
 	},
-	opts = {},
+	opts = {
+		-- sources = {
+		-- 	lsp = true,
+		-- 	path = true,
+		-- 	treesitter = true,
+		-- 	markdown = true,
+		-- 	terminal = true,
+		-- },
+		-- Add more configuration options as needed
+	},
 }

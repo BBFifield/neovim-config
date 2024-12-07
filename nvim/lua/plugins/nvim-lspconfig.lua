@@ -16,7 +16,7 @@ return {
 		},
 		config = function()
 			local lspconfig = require("lspconfig")
-			local navic_enabled, navic = pcall(require, "navic")
+			local navic_enabled, navic = pcall(require, "nvim-navic")
 
 			lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
 				capabilities = vim.tbl_deep_extend(
