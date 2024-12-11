@@ -15,6 +15,11 @@ return {
 			"antosha417/nvim-lsp-file-operations",
 		},
 		config = function()
+			local signs = { Error = "", Warn = "", Hint = "󰌶", Info = "" }
+			for type, icon in pairs(signs) do
+				local hl = "DiagnosticSign" .. type
+				vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+			end
 			local lspconfig = require("lspconfig")
 			local navic_enabled, navic = pcall(require, "nvim-navic")
 

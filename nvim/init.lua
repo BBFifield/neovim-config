@@ -16,18 +16,19 @@ NewfieVim_object = require("config.newfievim")
 local opts = {
 	plugin_list = {
 		alpha = { "goolord/alpha-nvim", enabled = true },
-		dropbar = { "Bekaboo/dropbar.nvim", enabled = true },
+		dropbar = { "Bekaboo/dropbar.nvim", enabled = false },
 		fidget = { "j-hui/fidget.nvim", enabled = true },
 		indent_blankline = { "lukas-reineke/indent-blankline.nvim", enabled = true },
 		lsp_config = { "neovim/nvim-lspconfig", enabled = true },
 		lualine = { "nvim-lualine/lualine.nvim", enabled = true, enable_buffers = false },
-		navic = { "SmiteshP/nvim-navic", enabled = false },
+		navic = { "SmiteshP/nvim-navic", enabled = true },
 		nvim_tree = { "nvim-tree/nvim-tree.lua", enabled = false },
 		nvim_treesitter = { "nvim-treesitter/nvim-treesitter", enabled = true },
 		telescope = { "nvim-telescope/telescope.nvim", enabled = true },
 		tfm = { "rolv-apneseth/tfm.nvim", enabled = false },
 		yazi = { "mikavilpas/yazi.nvim", enabled = true },
 		which_key = { "folke/which-key.nvim", enabled = true },
+		gitsigns = { "lewis6991/gitsigns.nvim", enabled = true },
 		base16_nvim = { "RRethy/base16-nvim", enabled = true },
 	},
 }
@@ -39,3 +40,4 @@ require("config.keymaps")
 vim.cmd.colorscheme(vim.g.colorscheme)
 vim.wo.number = true
 vim.wo.cursorline = true
+vim.opt.signcolumn = "yes:1"

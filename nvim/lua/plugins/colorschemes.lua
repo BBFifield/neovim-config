@@ -1,6 +1,6 @@
 return {
 	{
-		{ "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+		"catppuccin/nvim",
 		"Mofiqul/dracula.nvim",
 		"folke/tokyonight.nvim",
 		"projekt0n/github-nvim-theme",
@@ -37,8 +37,8 @@ return {
 			vim.cmd.colorscheme(vim.g.colorscheme)
 			-- Define a function to reload the custom_base16 module
 			local function reload_custom_base16()
-				package.loaded["plugins.lualine.custom_base16"] = nil
-				return require("plugins.lualine.custom_base16")
+				package.loaded["plugins.lualine.custom_themes.base16"] = nil
+				return require("plugins.lualine.custom_themes.base16")
 			end
 
 			local fwatch = require("fwatch")
@@ -70,51 +70,70 @@ return {
 								vim.cmd.colorscheme("base16-" .. config.current_colorscheme)
 								-- Reload colors and update lualine
 								local colors = require("base16-colorscheme").colors
+								local theme
+								if NewfieVim:get_plugin_info("base16_nvim").enabled then
+									colors = require("base16-colorscheme").colors
+									theme = reload_custom_base16()
+								else
+									theme = "auto"
+								end
+								-- local tabline = {}
+								-- if NewfieVim:get_plugin_info("dropbar").enabled then
+								-- 	tabline = vim.tbl_deep_extend("keep", tabline, {
+								-- 		tabline = {
+								-- 			lualine_b = {
+								-- 				{ "dropbar.get_dropbar_str()", separator = { left = "", right = "" } },
+								-- 			},
+								-- 		},
+								-- 	})
+								-- elseif NewfieVim:get_plugin_info("navic").enabled then
+								-- 	tabline = vim.tbl_deep_extend("keep", tabline, {
+								-- 		tabline = {
+								-- 			lualine_b = {
+								-- 				{
+								-- 					"navic",
+								-- 					color_correction = "dynamic",
+								-- 					separator = { left = "", right = "" },
+								-- 					padding = 0,
+								-- 					color = { fg = colors.base0D, bg = colors.base01 },
+								-- 				},
+								-- 			},
+								-- 		},
+								-- 	})
+								-- end
 
+								-- local winbar = {
+								-- 	winbar = {
+								-- 		lualine_a = {
+								-- 			{
+								-- 				function()
+								-- 					return "%="
+								-- 				end,
+								-- 				color = { bg = colors.base01, fg = colors.base01 },
+								-- 				separator = { right = "%#lualine_b_normal#" },
+								-- 			},
+								-- 			{
+								-- 				"filename",
+								-- 				color = { bg = colors.base0D, gui = "bold" },
+								-- 				symbols = { modified = "%#file_modified#●" },
+								-- 				path = 1,
+								-- 				separator = { left = "", right = "" },
+								-- 				padding = 0,
+								-- 				--fmt = trunc(80, 10, nil, false),
+								-- 			},
+								-- 			{
+								-- 				function()
+								-- 					return "%="
+								-- 				end,
+								-- 				color = { bg = colors.base01 },
+								-- 			},
+								-- 		},
+								-- 	},
+								-- }
 								-- Reload the custom_base16 module
-								local custom_base16 = reload_custom_base16()
+								local build_lualine_config = require("plugins.lualine.config")
 
-								require("lualine").setup({
-									options = {
-										icons_enabled = true,
-										theme = custom_base16,
-										component_separators = { left = "", right = "" },
-										section_separators = { left = "", right = "" },
-									},
-									sections = {
-										lualine_a = { { "mode", separator = { left = "", right = "" } } },
-										lualine_b = {
-											{
-												"branch",
-												color = { fg = colors.base0E },
-											},
-											"diff",
-											"diagnostics",
-										},
-										lualine_c = {},
-										lualine_x = {},
-										lualine_y = { "filetype", "encoding", "fileformat", "progress" },
-										lualine_z = { { "location", separator = { left = "", right = "" } } },
-									},
-									inactive_sections = {
-										lualine_a = {},
-										lualine_b = {},
-										lualine_c = {},
-										lualine_x = {},
-										lualine_y = {
-											"filename",
-											"filetype",
-										},
-										lualine_z = {
-											{
-												"location",
-												separator = { left = "", right = "" },
-											},
-										},
-									},
-									extensions = { "lazy" },
-								})
-
+								require("lualine").setup(build_lualine_config(colors, theme))
 								require("lualine").refresh()
 							end)
 						else
@@ -141,6 +160,9 @@ return {
 		opts = {
 			autoreload = true,
 		},
+	},
+	{
+		"xiyaowong/transparent.nvim",
 	},
 	{
 		"NvChad/nvim-colorizer.lua",

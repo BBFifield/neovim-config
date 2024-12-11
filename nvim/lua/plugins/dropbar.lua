@@ -6,13 +6,22 @@ return {
 		"nvim-telescope/telescope-fzf-native.nvim",
 	},
 	opts = {
-		-- sources = {
-		-- 	lsp = true,
-		-- 	path = true,
-		-- 	treesitter = true,
-		-- 	markdown = true,
-		-- 	terminal = true,
-		-- },
-		-- Add more configuration options as needed
+		menu = {
+			-- When on, preview the symbol under the cursor on CursorMoved
+			preview = false,
+			-- When on, automatically set the cursor to the closest previous/next
+			-- clickable component in the direction of cursor movement on CursorMoved
+			quick_navigation = false,
+			entry = {
+				padding = {
+					left = 0,
+					right = 0,
+				},
+			},
+			win_configs = {
+				border = "rounded",
+				style = "minimal",
+			},
+		},
 	},
 }

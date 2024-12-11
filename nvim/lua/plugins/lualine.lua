@@ -1,19 +1,24 @@
-vim.api.nvim_create_autocmd("VimEnter", {
-	callback = function()
-		local active = vim.api.nvim_get_hl(0, { name = "lualine_a_normal" })
-		local inactive = vim.api.nvim_get_hl(0, { name = "lualine_b_normal" })
+if NewfieVim:get_plugin_info("base16_nvim").enabled then
+	local update_highlights = function(colors)
+		vim.api.nvim_set_hl(0, "file_modified", { fg = colors.base09, bg = colors.base0D, ctermfg = 14, ctermbg = 9 })
 		vim.api.nvim_set_hl(
 			0,
-			"active_buffer_title",
-			{ ctermfg = 18, ctermbg = 12, fg = active.fg, bg = active.bg, bold = true }
+			"lualine_a_normal",
+			{ ctermfg = 18, ctermbg = 12, fg = colors.base01, bg = colors.base0D, bold = true }
 		)
 		vim.api.nvim_set_hl(
 			0,
-			"inactive_buffer_title",
-			{ ctermfg = 12, ctermbg = 18, fg = inactive.fg, bg = inactive.bg }
+			"lualine_b_normal",
+			{ ctermfg = 12, ctermbg = 18, fg = colors.base0D, bg = colors.base01 }
 		)
-	end,
-})
+	end
+	vim.api.nvim_create_autocmd({ "ColorScheme", "VimEnter" }, {
+		callback = function()
+			update_highlights(require("base16-colorscheme").colors)
+		end,
+	})
+end
+
 return {
 	"nvim-lualine/lualine.nvim",
 	dependencies = {
@@ -21,148 +26,17 @@ return {
 	},
 	opts = {},
 	config = function(_, opts)
-		vim.cmd.colorscheme(vim.g.colorscheme) -- Ensure the colorscheme is applied early
-
-		-- Define and extend winbar
-		local winbar = {}
-		if NewfieVim:get_plugin_info("navic").enabled then
-			local navic = require("nvim-navic")
-			local barbecue = require("barbecue.ui")
-			local dropbar = require("dropbar")
-			winbar = {
-				winbar = {
-					lualine_c = {
-						{ "dropbar.get_dropbar_str()", separator = { left = "", right = "" }, color = nil },
-					},
-					-- 	-- {
-					-- 	-- 	function()
-					-- 	-- 		return navic.get_location()
-					-- 	-- 	end,
-					-- 	-- 	cond = function()
-					-- 	-- 		return navic.is_available()
-					-- 	-- 	end,
-					-- 	-- },
-					-- 	-- {
-					-- 	-- 	"navic",
-					-- 	-- 	color_correction = "dynamic",
-					-- 	-- },
-					-- 	{
-					-- 		function()
-					-- 			return barbecue.update() or ""
-					-- 		end,
-					-- 		cond = function()
-					-- 			return navic.is_available()
-					-- 		end,
-					-- 	},
-					-- },
-					lualine_x = {
-						{
-							"datetime",
-							separator = { left = "", right = "" },
-							style = "%H:%M",
-						},
-					},
-				},
-			}
-		end
-
-		local tabline = {}
-		if NewfieVim:get_plugin_info("lualine").enable_custom_buffers then
-			tabline = {
-				tabline = {
-					lualine_c = {
-						{
-							require("plugins.lualine.custom_buffers"),
-							show_filename_only = true,
-							hide_filename_extension = false,
-							show_modified_status = true,
-							mode = 0,
-							filetype_names = {
-								checkhealth = "Check Health",
-								TelescopePrompt = "Telescope",
-							},
-							buffers_color = {
-								active = "active_buffer_title",
-								inactive = "inactive_buffer_title",
-							},
-							separator = { left = "", right = "" },
-							padding = 0,
-							max_length = function()
-								return vim.o.columns * 4 / 3
-							end,
-							symbols = {
-								modified = "",
-							},
-							cond = function()
-								return vim.bo.filetype ~= "alpha"
-									and vim.bo.filetype ~= "lazy"
-									and vim.bo.filetype ~= "TelescopePrompt"
-									and vim.bo.filetype ~= "NvimTree"
-									and vim.bo.filetype ~= "tfm"
-							end,
-						},
-					},
-					lualine_x = {},
-					lualine_y = {},
-					lualine_z = {
-						{
-							"datetime",
-							separator = { left = "", right = "" },
-							style = "%H:%M",
-						},
-					},
-				},
-			}
-		end
-
-		-- Fetch colors for custom theme
+		local colors
 		local theme
-		local colors = require("base16-colorscheme").colors
 		if NewfieVim:get_plugin_info("base16_nvim").enabled then
-			theme = require("plugins.lualine.custom_base16")
+			colors = require("base16-colorscheme").colors
+			theme = require("plugins.lualine.custom_themes.base16")
 		else
 			theme = "auto"
 		end
 
-		require("lualine").setup(vim.tbl_deep_extend("keep", winbar, {
-			options = {
-				icons_enabled = true,
-				theme = theme,
-				component_separators = { left = "", right = "" },
-				section_separators = { left = "", right = "" },
-			},
-			sections = {
-				lualine_a = { { "mode", separator = { left = "", right = "" } } },
-				lualine_b = {
-					{
-						"branch",
-						color = { fg = colors.base0E },
-					},
-					"diff",
-					"diagnostics",
-				},
-				lualine_c = {},
-				lualine_x = {},
-				lualine_y = { "filetype", "encoding", "fileformat", "progress" },
-				lualine_z = { { "location", separator = { left = "", right = "" } } },
-			},
-			inactive_sections = {
-				lualine_a = {},
-				lualine_b = {},
-				lualine_c = {},
-				lualine_x = {},
-				lualine_y = {
-					"filename",
-					"filetype",
-				},
-				lualine_z = {
-					{
-						"location",
-						separator = { left = "", right = "" },
-					},
-				},
-			},
-			extensions = { "lazy" },
-		}))
+		local build_lualine_config = require("plugins.lualine.config")
+
+		require("lualine").setup(build_lualine_config(colors, theme))
 	end,
 }
