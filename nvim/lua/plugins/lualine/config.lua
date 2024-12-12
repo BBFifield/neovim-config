@@ -16,57 +16,68 @@ local function diff_source()
 	end
 end
 
-local tabline = {}
-if NewfieVim:get_plugin_info("lualine").enable_buffers then
-	tabline = {
-		tabline = {
-			lualine_c = {
-				{
-					require("plugins.lualine.custom_components.buffers"),
-					show_filename_only = true,
-					hide_filename_extension = false,
-					show_modified_status = true,
-					mode = 0,
-					filetype_names = {
-						checkhealth = "Check Health",
-						TelescopePrompt = "Telescope",
-					},
-					buffers_color = {
-						active = "lualine_a_normal",
-						inactive = "lualine_b_normal",
-					},
-					separator = { left = "", right = "" },
-					padding = 0,
-					max_length = function()
-						return vim.o.columns * 4 / 3
-					end,
-					symbols = {
-						modified = "",
-					},
-					cond = function()
-						return vim.bo.filetype ~= "alpha"
-							and vim.bo.filetype ~= "lazy"
-							and vim.bo.filetype ~= "TelescopePrompt"
-							and vim.bo.filetype ~= "NvimTree"
-							and vim.bo.filetype ~= "tfm"
-					end,
-				},
-			},
-
-			lualine_x = {},
-			lualine_y = {},
-			lualine_z = {},
-		},
-	}
-end
-
 local build_lualine_config = function(colors, theme)
 	local tabline = {}
-	if NewfieVim:get_plugin_info("dropbar").enabled then
+	if NewfieVim:get_plugin_info("lualine").enable_buffers then
+		tabline = {
+			tabline = {
+				lualine_c = {
+					{
+						require("plugins.lualine.custom_components.buffers"),
+						show_filename_only = true,
+						hide_filename_extension = false,
+						show_modified_status = true,
+						mode = 0,
+						filetype_names = {
+							checkhealth = "Check Health",
+							TelescopePrompt = "Telescope",
+						},
+						buffers_color = {
+							active = "lualine_a_normal",
+							inactive = "lualine_b_normal",
+						},
+						separator = { left = "", right = "" },
+						padding = 0,
+						max_length = function()
+							return vim.o.columns * 4 / 3
+						end,
+						symbols = {
+							modified = "",
+						},
+						cond = function()
+							return vim.bo.filetype ~= "alpha"
+								and vim.bo.filetype ~= "lazy"
+								and vim.bo.filetype ~= "TelescopePrompt"
+								and vim.bo.filetype ~= "NvimTree"
+								and vim.bo.filetype ~= "tfm"
+						end,
+					},
+				},
+
+				lualine_x = {
+					{
+						"tabs",
+						separator = { left = "", right = "" },
+						tabs_color = {
+							active = "lualine_a_normal",
+							inactive = "lualine_b_normal",
+						},
+					},
+				},
+				lualine_y = {},
+				lualine_z = {},
+			},
+		}
+	elseif NewfieVim:get_plugin_info("dropbar").enabled then
 		tabline = vim.tbl_deep_extend("keep", tabline, {
 			tabline = {
 				lualine_b = {
-					{ "dropbar.get_dropbar_str()", separator = { left = "", right = "" } },
+					{
+						"dropbar.get_dropbar_str()",
+						separator = { left = "", right = "" },
+						padding = 0,
+						color = { fg = colors.base0D, bg = colors.base01 },
+					},
 				},
 			},
 		})
@@ -94,22 +105,37 @@ local build_lualine_config = function(colors, theme)
 				},
 			},
 		})
-	end
+	else
+		tabline = vim.tbl_deep_extend("keep", tabline, {
+			tabline = {
+				lualine_x = {
+					{
+						"tabs",
+						separator = { left = "", right = "" },
+						tabs_color = {
+							active = "lualine_a_normal",
+							inactive = "lualine_b_normal",
+						},
+					},
+				},
+			},
+		})
+	-- end
 	local winbar = {
 		winbar = {
-			lualine_a = {
+			lualine_b = {
 				{
 					function()
 						return "%="
 					end,
 					color = { bg = colors.base01, fg = colors.base01 },
 					separator = {
-						right = "%#lualine_b_normal#",
+						right = "%#spacer_separator#",
 					},
 				},
 				{
 					"filename",
-					color = { bg = colors.base0D, gui = "bold" },
+					color = { bg = colors.base0D, fg = colors.base01, gui = "bold" },
 					symbols = { modified = "%#file_modified#●" },
 					path = 1,
 					separator = { left = "", right = "" },
@@ -141,7 +167,7 @@ local build_lualine_config = function(colors, theme)
 					icon = "",
 					color = { fg = colors.base0E },
 				},
-				{ "diff", source = diff_source },
+				{ "diff", source = diff_source() },
 				"diagnostics",
 			},
 			lualine_c = {},
@@ -162,17 +188,18 @@ local build_lualine_config = function(colors, theme)
 					function()
 						return "%="
 					end,
-					color = { bg = colors.base01, fg = colors.base02 },
-					separator = { right = "%#inactive_buffer_title#" },
+					color = { bg = colors.base01, fg = colors.base01 },
+					separator = {
+						right = "%#spacer_separator_inactive_win#",
+					},
 				},
 				{
 					"filename",
-					color = { bg = colors.base02, gui = "bold" },
-					symbols = { modified = "%#file_modified#●" },
+					color = { bg = colors.base02, fg = colors.base0D },
+					symbols = { modified = "%#file_modified_inactive_win#●" },
 					path = 1,
-					separator = { left = "", right = "" },
+					separator = { left = "", right = "%#spacer_separator_inactive_win#" },
 					padding = 0,
-					--fmt = trunc(80, 10, nil, false),
 				},
 				{
 					function()

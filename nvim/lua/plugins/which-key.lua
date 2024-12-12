@@ -2,7 +2,7 @@ return {
 	"folke/which-key.nvim",
 	event = "VeryLazy",
 	opts = {
-		preset = "modern",
+		preset = "helix",
 		delay = 500,
 		spec = {
 			{ "<leader>u", group = "UI", icon = "" },

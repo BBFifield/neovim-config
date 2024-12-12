@@ -21,7 +21,7 @@ local opts = {
 		indent_blankline = { "lukas-reineke/indent-blankline.nvim", enabled = true },
 		lsp_config = { "neovim/nvim-lspconfig", enabled = true },
 		lualine = { "nvim-lualine/lualine.nvim", enabled = true, enable_buffers = false },
-		navic = { "SmiteshP/nvim-navic", enabled = true },
+		navic = { "SmiteshP/nvim-navic", enabled = false },
 		nvim_tree = { "nvim-tree/nvim-tree.lua", enabled = false },
 		nvim_treesitter = { "nvim-treesitter/nvim-treesitter", enabled = true },
 		telescope = { "nvim-telescope/telescope.nvim", enabled = true },
