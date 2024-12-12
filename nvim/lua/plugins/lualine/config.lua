@@ -120,97 +120,97 @@ local build_lualine_config = function(colors, theme)
 				},
 			},
 		})
-	-- end
-	local winbar = {
-		winbar = {
-			lualine_b = {
-				{
-					function()
-						return "%="
-					end,
-					color = { bg = colors.base01, fg = colors.base01 },
-					separator = {
-						right = "%#spacer_separator#",
+		-- end
+		local winbar = {
+			winbar = {
+				lualine_b = {
+					{
+						function()
+							return "%="
+						end,
+						color = { bg = colors.base01, fg = colors.base01 },
+						separator = {
+							right = "%#spacer_separator#",
+						},
+					},
+					{
+						"filename",
+						color = { bg = colors.base0D, fg = colors.base01, gui = "bold" },
+						symbols = { modified = "%#file_modified#●" },
+						path = 1,
+						separator = { left = "", right = "" },
+						padding = 0,
+					},
+					{
+						function()
+							return "%="
+						end,
+						color = { bg = colors.base01 },
 					},
 				},
-				{
-					"filename",
-					color = { bg = colors.base0D, fg = colors.base01, gui = "bold" },
-					symbols = { modified = "%#file_modified#●" },
-					path = 1,
-					separator = { left = "", right = "" },
-					padding = 0,
-				},
-				{
-					function()
-						return "%="
-					end,
-					color = { bg = colors.base01 },
-				},
 			},
-		},
-	}
-	return vim.tbl_deep_extend("keep", winbar, tabline, {
-		options = {
-			icons_enabled = true,
-			theme = theme,
-			always_divide_middle = true,
-			globalstatus = true,
-			component_separators = { left = "", right = "" },
-			section_separators = { left = "", right = "" },
-		},
-		sections = {
-			lualine_a = { { "mode", separator = { left = "", right = "" } } },
-			lualine_b = {
-				{
-					branch_component,
-					icon = "",
-					color = { fg = colors.base0E },
-				},
-				{ "diff", source = diff_source() },
-				"diagnostics",
+		}
+		return vim.tbl_deep_extend("keep", winbar, tabline, {
+			options = {
+				icons_enabled = true,
+				theme = theme,
+				always_divide_middle = true,
+				globalstatus = true,
+				component_separators = { left = "", right = "" },
+				section_separators = { left = "", right = "" },
 			},
-			lualine_c = {},
-			lualine_x = {},
-			lualine_y = { "filetype", "encoding", "fileformat", "progress" },
-			lualine_z = { { "location", separator = { left = "", right = "" } } },
-		},
-		inactive_sections = {
-			lualine_a = {},
-			lualine_b = {},
-			lualine_c = {},
-			lualine_x = {},
-			lualine_y = {},
-		},
-		inactive_winbar = {
-			lualine_b = {
-				{
-					function()
-						return "%="
-					end,
-					color = { bg = colors.base01, fg = colors.base01 },
-					separator = {
-						right = "%#spacer_separator_inactive_win#",
+			sections = {
+				lualine_a = { { "mode", separator = { left = "", right = "" } } },
+				lualine_b = {
+					{
+						branch_component,
+						icon = "",
+						color = { fg = colors.base0E },
+					},
+					{ "diff", source = diff_source() },
+					"diagnostics",
+				},
+				lualine_c = {},
+				lualine_x = {},
+				lualine_y = { "filetype", "encoding", "fileformat", "progress" },
+				lualine_z = { { "location", separator = { left = "", right = "" } } },
+			},
+			inactive_sections = {
+				lualine_a = {},
+				lualine_b = {},
+				lualine_c = {},
+				lualine_x = {},
+				lualine_y = {},
+			},
+			inactive_winbar = {
+				lualine_b = {
+					{
+						function()
+							return "%="
+						end,
+						color = { bg = colors.base01, fg = colors.base01 },
+						separator = {
+							right = "%#spacer_separator_inactive_win#",
+						},
+					},
+					{
+						"filename",
+						color = { bg = colors.base02, fg = colors.base0D },
+						symbols = { modified = "%#file_modified_inactive_win#●" },
+						path = 1,
+						separator = { left = "", right = "%#spacer_separator_inactive_win#" },
+						padding = 0,
+					},
+					{
+						function()
+							return "%="
+						end,
+						color = { bg = colors.base01 },
 					},
 				},
-				{
-					"filename",
-					color = { bg = colors.base02, fg = colors.base0D },
-					symbols = { modified = "%#file_modified_inactive_win#●" },
-					path = 1,
-					separator = { left = "", right = "%#spacer_separator_inactive_win#" },
-					padding = 0,
-				},
-				{
-					function()
-						return "%="
-					end,
-					color = { bg = colors.base01 },
-				},
 			},
-		},
-		extensions = { "lazy" },
-	})
+			extensions = { "lazy" },
+		})
+	end
 end
-
 return build_lualine_config
