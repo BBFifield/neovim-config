@@ -10,24 +10,77 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 
 return {
 	{
+		"folke/neoconf.nvim",
+		opts = {
+			-- name of the local settings files
+			local_settings = ".neoconf.json",
+			-- name of the global settings file in your Neovim config directory
+			global_settings = "neoconf.json",
+			-- import existing settings from other plugins
+			import = {
+				vscode = true, -- local .vscode/settings.json
+				nlsp = true, -- global/local nlsp-settings.nvim json settings
+			},
+			-- send new configuration to lsp clients when changing json settings
+			live_reload = true,
+			-- set the filetype to jsonc for settings files, so you can use comments
+			-- make sure you have the jsonc treesitter parser installed!
+			filetype_jsonc = true,
+			plugins = {
+				-- configures lsp clients with settings in the following order:
+				-- - lua settings passed in lspconfig setup
+				-- - global json settings
+				-- - local json settings
+				lspconfig = {
+					enabled = true,
+				},
+				-- configures jsonls to get completion in .nvim.settings.json files
+				jsonls = {
+					enabled = true,
+					-- only show completion in json settings for configured lsp servers
+					configured_servers_only = true,
+				},
+				-- configures lua_ls to get completion of lspconfig server settings
+				lua_ls = {
+					-- by default, lua_ls annotations are only enabled in your neovim config directory
+					enabled_for_neovim_config = true,
+					-- explicitly enable adding annotations. Mostly relevant to put in your local .nvim.settings.json file
+					enabled = false,
+				},
+			},
+		},
+	},
+	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
 			"antosha417/nvim-lsp-file-operations",
+			"folke/neoconf.nvim",
 		},
 		config = function()
+			local lspconfig = require("lspconfig")
+			local navic_enabled, navic = pcall(require, "nvim-navic")
+
+			wk.add({
+				{
+					"<leader>li",
+					"<cmd>:LspInfo<CR>",
+					icon = "",
+					desc = "Show status of active and configured language servers",
+				},
+			})
+
 			local signs = { Error = "", Warn = "", Hint = "󰌶", Info = "" }
 			for type, icon in pairs(signs) do
 				local hl = "DiagnosticSign" .. type
 				vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 			end
-			local lspconfig = require("lspconfig")
-			local navic_enabled, navic = pcall(require, "nvim-navic")
 
 			lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
 				capabilities = vim.tbl_deep_extend(
 					"force",
 					vim.lsp.protocol.make_client_capabilities(),
-					require("lsp-file-operations").default_capabilities()
+					require("lsp-file-operations").default_capabilities(),
+					require("blink.cmp").get_lsp_capabilities()
 				),
 				on_attach = function(client, bufnr)
 					require("lsp-file-operations").setup()
@@ -82,7 +135,7 @@ return {
 				settings = {
 					["rust-analyzer"] = {
 						diagnostics = {
-							enable = false,
+							enable = true,
 						},
 					},
 				},
@@ -94,11 +147,7 @@ return {
 	{
 		"stevearc/conform.nvim",
 		enabled = function()
-			if NewfieVim:get_plugin_info("lsp_config").enabled then
-				return true
-			else
-				return false
-			end
+			return NewfieVim:get_plugin_info("lsp_config").enabled
 		end,
 		version = "*",
 		opts = {
@@ -118,8 +167,53 @@ return {
 		config = function(_, opts)
 			require("conform").setup(opts)
 			wk.add({
-				{ "<leader>lr", "<cmd>lua vim.lsp.buf.format()<CR>", icon = "󰝔", desc = "Run formatter" },
+				{ "<leader>lf", "<cmd>lua vim.lsp.buf.format()<CR>", icon = "󰝔", desc = "Run formatter" },
 			})
 		end,
+	},
+
+	{
+		{
+			"folke/lazydev.nvim",
+			ft = "lua", -- only load on lua files
+			opts = {
+				library = {
+					-- See the configuration section for more details
+					-- Load luvit types when the `vim.uv` word is found
+					{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+				},
+			},
+		},
+		{ -- optional blink completion source for require statements and module annotations
+			"saghen/blink.cmp",
+			lazy = false, -- lazy loading handled internally
+			-- optional: provides snippets for the snippet source
+			dependencies = "rafamadriz/friendly-snippets",
+			version = "v0.7.6",
+			--build = "nix run .#build-plugin",
+			opts = {
+				appearance = {
+					-- Sets the fallback highlight groups to nvim-cmp's highlight groups
+					-- Useful for when your theme doesn't support blink.cmp
+					-- will be removed in a future release
+					use_nvim_cmp_as_default = true,
+					-- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+					-- Adjusts spacing to ensure icons are aligned
+					nerd_font_variant = "mono",
+				},
+				sources = {
+					-- add lazydev to your completion providers
+					default = { "lsp", "path", "snippets", "buffer", "lazydev" },
+					providers = {
+						-- dont show LuaLS require statements when lazydev has items
+						lazydev = {
+							name = "LazyDev",
+							module = "lazydev.integrations.blink",
+							fallbacks = { "lsp" },
+						},
+					},
+				},
+			},
+		},
 	},
 }
