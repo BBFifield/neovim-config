@@ -192,6 +192,7 @@ return {
 			version = "v0.7.6",
 			--build = "nix run .#build-plugin",
 			opts = {
+				keymap = { preset = "enter" },
 				appearance = {
 					-- Sets the fallback highlight groups to nvim-cmp's highlight groups
 					-- Useful for when your theme doesn't support blink.cmp

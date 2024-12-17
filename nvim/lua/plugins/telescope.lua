@@ -8,7 +8,6 @@ return {
 		"nvim-lua/plenary.nvim",
 		"BurntSushi/ripgrep",
 		"nvim-telescope/telescope-fzy-native.nvim",
-		"sharkdp/fd",
 		"jvgrootveld/telescope-zoxide",
 	},
 	event = "VimEnter",
@@ -27,12 +26,12 @@ return {
 			},
 			colorscheme = {
 				enable_preview = true,
-				ignore_builtins = true,
+				ignore_builtins = false,
 			},
 		},
 		extensions = {
 			zoxide = {
-				prompt_title = "[ Cool stuff ]",
+				prompt_title = "[ Frequent Directories ]",
 				mappings = {
 					default = {
 						after_action = function(selection)
@@ -56,14 +55,39 @@ return {
 		telescope.load_extension("zoxide")
 		local wk = require("which-key")
 		wk.add({
-			{ "<leader>f", group = "Telescope" },
-			{ "<leader>ff", builtin.find_files, desc = "Find files" },
-			{ "<leader>fg", builtin.live_grep, desc = "Live grep" },
-			{ "<leader>fb", builtin.buffers, desc = "Buffers" },
-			{ "<leader>fh", builtin.help_tags, desc = "Help tags" },
+			{ "<leader>ff", builtin.find_files, desc = "Files" },
 			{ "<leader>fr", builtin.oldfiles, desc = "Recent files" },
+			{ "<leader>ft", builtin.filetypes, desc = "Filetypes" },
+
+			{ "<leader>dz", telescope.extensions.zoxide.list, desc = "Zoxide list" },
+
+			{ "<leader>fg", builtin.grep_string, desc = "Grep selection" },
+			{ "<leader>fg", builtin.live_grep, desc = "Live grep" },
+
+			{ "<leader>bl", builtin.buffers, desc = "Buffer list" },
+			{ "<leader>bf", builtin.current_buffer_fuzzy_find, desc = "Search in Buf" },
+
+			{ "<leader>gf", builtin.git_files, desc = "Git files" },
+
+			{ "<leader>cc", builtin.commands, desc = "Plugin/User commands" },
+			{ "<leader>cr", builtin.command_history, desc = "Recent commands" },
+			{ "<leader>ca", builtin.autocommands, desc = "Autocmds" },
+
+			{ "<leader>hm", builtin.man_pages, desc = "Man pages" },
+			{ "<leader>ht", builtin.help_tags, desc = "Help tags" },
+
 			{ "<leader>uc", builtin.colorscheme, desc = "Color schemes" },
-			{ "<leader>fz", telescope.extensions.zoxide.list, desc = "Zoxide list" },
+			{ "<leader>uh", builtin.highlights, desc = "Available highlights" },
+
+			{ "<leader>r", builtin.registers, desc = "Registers", icon = "󱍶" },
+			{ "<leader>o", builtin.vim_options, desc = "Vim options", icon = "" },
+			{ "<leader>q", builtin.quickfix, desc = "Quickfix list" },
+			{ "<leader>m", builtin.marks, desc = "Marks" },
+
+			{ "<leader>lr", builtin.lsp_references, desc = "LSP references" },
+			{ "<leader>li", builtin.lsp_incoming_calls, desc = "LSP incoming calls" },
+			{ "<leader>lo", builtin.lsp_outgoing_calls, desc = "LSP outgoing calls" },
+			{ "<leader>ld", builtin.diagnostics, desc = "LSP diagnostics" },
 		})
 		-- bit of debugging
 		local status, z_utils = pcall(require, "telescope._extensions.zoxide.utils")

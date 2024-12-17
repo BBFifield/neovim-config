@@ -1,20 +1,25 @@
 return {
 	{
 		"catppuccin/nvim",
-		"Mofiqul/dracula.nvim",
-		"folke/tokyonight.nvim",
-		"projekt0n/github-nvim-theme",
-		"rebelot/kanagawa.nvim",
-		"eldritch-theme/eldritch.nvim",
-		"slugbyte/lackluster.nvim",
-		"Mofiqul/vscode.nvim",
-		"craftzdog/solarized-osaka.nvim",
-		"sainnhe/gruvbox-material",
 	},
 	{
 		"RRethy/base16-nvim",
 		priority = 1000,
 		config = function()
+			vim.api.nvim_create_autocmd({ "ColorScheme", "VimEnter" }, {
+				callback = function()
+					local colors = require("base16-colorscheme").colors
+					vim.api.nvim_set_hl(0, "FloatBorder", { bg = colors.base01 })
+					vim.api.nvim_set_hl(0, "NormalFloat", { bg = colors.base01 })
+					if vim.g.transparent then
+						vim.api.nvim_set_hl(0, "Normal", { bg = nil })
+						vim.api.nvim_set_hl(0, "NonText", { bg = nil })
+					end
+					if NewfieVim:get_plugin_info("yazi").enabled then
+						vim.api.nvim_set_hl(0, "YaziFloat", { bg = colors.base01 })
+					end
+				end,
+			})
 			local settings_path = vim.fn.expand("~/.config/tintednix/settings.txt")
 			local config = {}
 			local file = io.open(settings_path, "r")
@@ -70,69 +75,9 @@ return {
 								vim.cmd.colorscheme("base16-" .. config.current_colorscheme)
 								-- Reload colors and update lualine
 								local colors = require("base16-colorscheme").colors
-								local theme
-								if NewfieVim:get_plugin_info("base16_nvim").enabled then
-									colors = require("base16-colorscheme").colors
-									theme = reload_custom_base16()
-								else
-									theme = "auto"
-								end
-								-- local tabline = {}
-								-- if NewfieVim:get_plugin_info("dropbar").enabled then
-								-- 	tabline = vim.tbl_deep_extend("keep", tabline, {
-								-- 		tabline = {
-								-- 			lualine_b = {
-								-- 				{ "dropbar.get_dropbar_str()", separator = { left = "", right = "" } },
-								-- 			},
-								-- 		},
-								-- 	})
-								-- elseif NewfieVim:get_plugin_info("navic").enabled then
-								-- 	tabline = vim.tbl_deep_extend("keep", tabline, {
-								-- 		tabline = {
-								-- 			lualine_b = {
-								-- 				{
-								-- 					"navic",
-								-- 					color_correction = "dynamic",
-								-- 					separator = { left = "", right = "" },
-								-- 					padding = 0,
-								-- 					color = { fg = colors.base0D, bg = colors.base01 },
-								-- 				},
-								-- 			},
-								-- 		},
-								-- 	})
-								-- end
-
-								-- local winbar = {
-								-- 	winbar = {
-								-- 		lualine_a = {
-								-- 			{
-								-- 				function()
-								-- 					return "%="
-								-- 				end,
-								-- 				color = { bg = colors.base01, fg = colors.base01 },
-								-- 				separator = { right = "%#lualine_b_normal#" },
-								-- 			},
-								-- 			{
-								-- 				"filename",
-								-- 				color = { bg = colors.base0D, gui = "bold" },
-								-- 				symbols = { modified = "%#file_modified#●" },
-								-- 				path = 1,
-								-- 				separator = { left = "", right = "" },
-								-- 				padding = 0,
-								-- 				--fmt = trunc(80, 10, nil, false),
-								-- 			},
-								-- 			{
-								-- 				function()
-								-- 					return "%="
-								-- 				end,
-								-- 				color = { bg = colors.base01 },
-								-- 			},
-								-- 		},
-								-- 	},
-								-- }
+								local theme = reload_custom_base16()
 								-- Reload the custom_base16 module
 								local build_lualine_config = require("plugins.lualine.config")
-
 								require("lualine").setup(build_lualine_config(colors, theme))
 								require("lualine").refresh()
 							end)
@@ -161,9 +106,15 @@ return {
 			autoreload = true,
 		},
 	},
-	{
-		"xiyaowong/transparent.nvim",
-	},
+	-- {
+	-- 	"mikesmithgh/borderline.nvim",
+	-- 	lazy = true,
+	-- 	event = "VeryLazy",
+	-- 	config = function()
+	-- 		require("borderline").setup({})
+	-- 		vim.cmd.Borderline("shadow")
+	-- 	end,
+	-- },
 	{
 		"NvChad/nvim-colorizer.lua",
 		event = "BufEnter",

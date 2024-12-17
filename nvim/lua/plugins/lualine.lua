@@ -3,8 +3,8 @@ if NewfieVim:get_plugin_info("base16_nvim").enabled then
 	local update_highlights = function(colors)
 		vim.api.nvim_set_hl(0, "file_modified", { fg = colors.base09, bg = colors.base0D })
 		vim.api.nvim_set_hl(0, "file_modified_inactive_win", { fg = colors.base09, bg = colors.base02 })
-		vim.api.nvim_set_hl(0, "spacer_separator", { fg = colors.base0D, bg = colors.base01 })
-		vim.api.nvim_set_hl(0, "spacer_separator_inactive_win", { fg = colors.base02, bg = colors.base01 })
+		vim.api.nvim_set_hl(0, "spacer_separator", { fg = colors.base0D, bg = nil })
+		vim.api.nvim_set_hl(0, "spacer_separator_inactive_win", { fg = colors.base02, bg = nil })
 		vim.api.nvim_set_hl(0, "lualine_a_normal", { fg = colors.base01, bg = colors.base0D, bold = true })
 		vim.api.nvim_set_hl(0, "lualine_b_normal", { fg = colors.base0D, bg = colors.base01 })
 	end
@@ -20,6 +20,7 @@ return {
 	dependencies = {
 		"nvim-tree/nvim-web-devicons",
 	},
+	event = { "ColorScheme", "VimEnter" },
 	opts = {},
 	config = function(_, opts)
 		local colors

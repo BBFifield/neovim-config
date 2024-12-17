@@ -1,17 +1,61 @@
 return {
-	"nvim-treesitter/nvim-treesitter",
-	build = ":TSUpdate",
-	config = function()
-		local configs = require("nvim-treesitter.configs")
+	{
+		"nvim-treesitter/nvim-treesitter",
+		build = ":TSUpdate",
+		config = function()
+			local configs = require("nvim-treesitter.configs")
 
-		configs.setup({
-			ensure_installed = { "hyprlang", "corn", "rust", "nix", "lua", "yaml", "javascript", "html", "css", "c" },
-			sync_install = false,
-			highlight = {
-				enable = true,
-				disable = { "nix", "lua", "rust" },
-			},
-			indent = { enable = true },
-		})
-	end,
+			configs.setup({
+				ensure_installed = {
+					"bash",
+					"hyprlang",
+					"corn",
+					"rust",
+					"nix",
+					"lua",
+					"yaml",
+					"javascript",
+					"html",
+					"css",
+					"c",
+				},
+				sync_install = false,
+				highlight = {
+					enable = true,
+					disable = { "nix", "lua", "rust" },
+				},
+				indent = { enable = true },
+			})
+		end,
+	},
+	{
+		"HiPhish/rainbow-delimiters.nvim",
+		priority = 900,
+		config = function()
+			local rainbow_delimiters = require("rainbow-delimiters")
+			require("rainbow-delimiters.setup").setup({
+				strategy = {
+					[""] = rainbow_delimiters.strategy["global"],
+					vim = rainbow_delimiters.strategy["local"],
+				},
+				query = {
+					[""] = "rainbow-delimiters",
+					lua = "rainbow-blocks",
+				},
+				priority = {
+					[""] = 110,
+					lua = 210,
+				},
+				highlight = {
+					"RainbowRed",
+					"RainbowYellow",
+					"RainbowBlue",
+					"RainbowOrange",
+					"RainbowGreen",
+					"RainbowViolet",
+					"RainbowCyan",
+				},
+			})
+		end,
+	},
 }

@@ -48,4 +48,14 @@ return {
 			},
 		},
 	},
+	config = function(_, opts)
+		local winblend = vim.g.transparent and 0 or 100
+		require("fidget").setup(vim.tbl_deep_extend("keep", {
+			notification = {
+				window = {
+					winblend = winblend,
+				},
+			},
+		}, opts))
+	end,
 }

@@ -2,12 +2,10 @@ return {
 	"folke/which-key.nvim",
 	event = "VeryLazy",
 	opts = {
-		preset = "helix",
+		preset = "classic",
 		delay = 500,
 		spec = {
-			{ "<leader>u", group = "UI", icon = "" },
-			{ "<leader>l", group = "LSP", icon = "󰿘" },
-			{ "<leader>w", proxy = "<c-w>", group = "Windows" },
+			{ "<leader>c", group = "Commands", icon = "" },
 			{
 				"<leader>b",
 				group = "Buffers",
@@ -16,6 +14,13 @@ return {
 					return require("which-key.extras").expand.buf()
 				end,
 			},
+			{ "<leader>d", group = "Directories", icon = "" },
+			{ "<leader>f", group = "Files" },
+			{ "<leader>g", group = "Git" },
+			{ "<leader>h", group = "Help", icon = "󰋖" },
+			{ "<leader>l", group = "LSP", icon = "󰿘" },
+			{ "<leader>u", group = "UI" },
+			{ "<leader>w", proxy = "<c-w>", group = "Windows" },
 		},
 	},
 	keys = {},
