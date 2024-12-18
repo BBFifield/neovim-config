@@ -9,15 +9,12 @@ return {
 			vim.api.nvim_create_autocmd({ "ColorScheme", "VimEnter" }, {
 				callback = function()
 					local colors = require("base16-colorscheme").colors
-					vim.api.nvim_set_hl(0, "FloatBorder", { bg = colors.base01 })
-					vim.api.nvim_set_hl(0, "NormalFloat", { bg = colors.base01 })
-					if vim.g.transparent then
-						vim.api.nvim_set_hl(0, "Normal", { bg = nil })
-						vim.api.nvim_set_hl(0, "NonText", { bg = nil })
-					end
+					local floatBg = vim.g.transparent and nil or colors.base01
 					if NewfieVim:get_plugin_info("yazi").enabled then
-						vim.api.nvim_set_hl(0, "YaziFloat", { bg = colors.base01 })
+						vim.api.nvim_set_hl(0, "YaziFloat", { bg = floatBg })
 					end
+					vim.api.nvim_set_hl(0, "FloatBorder", { bg = floatBg })
+					vim.api.nvim_set_hl(0, "NormalFloat", { bg = floatBg })
 				end,
 			})
 			local settings_path = vim.fn.expand("~/.config/tintednix/settings.txt")
@@ -56,8 +53,6 @@ return {
 
 				watcher = fwatch.watch(settings_path, {
 					on_event = function()
-						-- Clear the config table to ensure no old values are retained
-
 						local file = io.open(settings_path, "r")
 						if file then
 							for line in file:lines() do
@@ -112,7 +107,8 @@ return {
 	-- 	event = "VeryLazy",
 	-- 	config = function()
 	-- 		require("borderline").setup({})
-	-- 		vim.cmd.Borderline("shadow")
+	-- 		local bordertype = vim.g.transparent and "diff" or "shadow"
+	-- 		vim.cmd.Borderline(bordertype)
 	-- 	end,
 	-- },
 	{
