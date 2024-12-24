@@ -30,8 +30,8 @@ return {
 			else
 				vim.g.colorscheme = "base16-catppuccin-frappe"
 			end
-			if config.current_colorscheme then
-				vim.g.colorscheme = "base16-" .. config.current_colorscheme
+			if config.color_scheme then
+				vim.g.colorscheme = "base16-" .. config.color_scheme
 			else
 				vim.g.colorscheme = "base16-catppuccin-frappe"
 			end
@@ -53,6 +53,7 @@ return {
 
 				watcher = fwatch.watch(settings_path, {
 					on_event = function()
+						print("event triggered")
 						local file = io.open(settings_path, "r")
 						if file then
 							for line in file:lines() do
@@ -65,9 +66,9 @@ return {
 							print("Error: Unable to open settings file")
 						end
 
-						if config.current_colorscheme then
+						if config.color_scheme then
 							vim.schedule(function()
-								vim.cmd.colorscheme("base16-" .. config.current_colorscheme)
+								vim.cmd.colorscheme("base16-" .. config.color_scheme)
 								-- Reload colors and update lualine
 								local colors = require("base16-colorscheme").colors
 								local theme = reload_custom_base16()
@@ -77,7 +78,7 @@ return {
 								require("lualine").refresh()
 							end)
 						else
-							print("Error: 'current_colorscheme' not set in settings.txt")
+							print("Error: 'color_scheme' not set in settings.txt")
 						end
 
 						-- Re-attach the watcher
