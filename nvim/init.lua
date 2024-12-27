@@ -41,13 +41,13 @@ vim.wo.number = true
 vim.wo.cursorline = true
 vim.opt.signcolumn = "yes:1"
 
-if vim.g.transparent then
-	vim.api.nvim_create_autocmd({ "ColorScheme", "VimEnter" }, {
-		callback = function()
+vim.api.nvim_create_autocmd({ "ColorScheme", "VimEnter" }, {
+	callback = function()
+		if vim.g.transparent then
 			vim.api.nvim_set_hl(0, "Normal", { bg = nil })
 			vim.api.nvim_set_hl(0, "NonText", { bg = nil })
 			vim.api.nvim_set_hl(0, "NormalNC", { bg = nil })
 			vim.api.nvim_set_hl(0, "LineNr", { bg = nil })
-		end,
-	})
-end
+		end
+	end,
+})

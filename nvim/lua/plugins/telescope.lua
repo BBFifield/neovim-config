@@ -64,7 +64,7 @@ return {
 			{ "<leader>fg", builtin.grep_string, desc = "Grep selection" },
 			{ "<leader>fg", builtin.live_grep, desc = "Live grep" },
 
-			{ "<leader>bl", builtin.buffers, desc = "Buffer list" },
+			--{ "<leader>bl", builtin.buffers, desc = "Buffer list" },
 			{ "<leader>bf", builtin.current_buffer_fuzzy_find, desc = "Search in Buf" },
 
 			{ "<leader>gf", builtin.git_files, desc = "Git files" },

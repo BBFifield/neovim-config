@@ -144,9 +144,6 @@ return {
 		config = function(_, opts)
 			wk.add({
 				{ "<leader>e", ":Yazi<CR>", icon = "󰙅", desc = "File Manager" },
-				{ "<leader>m", group = "Yazi", icon = "" },
-				--{ "<leader>mh", ":TfmSplit<CR>", icon = "", desc = "Horizontal split" },
-				--{ "<leader>mv", ":TfmVsplit<CR>", icon = "", desc = "Vertical split" },
 			})
 			require("yazi").setup(opts)
 		end,

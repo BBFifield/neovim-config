@@ -2,7 +2,7 @@ return {
 	"folke/which-key.nvim",
 	event = "VeryLazy",
 	opts = {
-		preset = "classic",
+		preset = "modern",
 		delay = 500,
 		spec = {
 			{ "<leader>c", group = "Commands", icon = "" },

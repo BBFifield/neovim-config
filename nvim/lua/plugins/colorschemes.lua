@@ -9,12 +9,13 @@ return {
 			vim.api.nvim_create_autocmd({ "ColorScheme", "VimEnter" }, {
 				callback = function()
 					local colors = require("base16-colorscheme").colors
-					local floatBg = vim.g.transparent and nil or colors.base01
+					local floatFg = colors.base0D
+					local floatBg = vim.g.transparent and nil or colors.base00
 					if NewfieVim:get_plugin_info("yazi").enabled then
-						vim.api.nvim_set_hl(0, "YaziFloat", { bg = floatBg })
+						vim.api.nvim_set_hl(0, "YaziFloat", { fg = floatFg, bg = floatBg })
 					end
-					vim.api.nvim_set_hl(0, "FloatBorder", { bg = floatBg })
-					vim.api.nvim_set_hl(0, "NormalFloat", { bg = floatBg })
+					vim.api.nvim_set_hl(0, "FloatBorder", { fg = floatFg, bg = floatBg })
+					vim.api.nvim_set_hl(0, "NormalFloat", { fg = floatFg, bg = floatBg })
 				end,
 			})
 			local settings_path = vim.fn.expand("~/.config/tintednix/settings.txt")
@@ -102,16 +103,16 @@ return {
 			autoreload = true,
 		},
 	},
-	-- {
-	-- 	"mikesmithgh/borderline.nvim",
-	-- 	lazy = true,
-	-- 	event = "VeryLazy",
-	-- 	config = function()
-	-- 		require("borderline").setup({})
-	-- 		local bordertype = vim.g.transparent and "diff" or "shadow"
-	-- 		vim.cmd.Borderline(bordertype)
-	-- 	end,
-	-- },
+	{
+		"mikesmithgh/borderline.nvim",
+		lazy = true,
+		event = "VeryLazy",
+		config = function()
+			require("borderline").setup({})
+			local bordertype = vim.g.transparent and "diff" or "rounded"
+			vim.cmd.Borderline(bordertype)
+		end,
+	},
 	{
 		"NvChad/nvim-colorizer.lua",
 		event = "BufEnter",
