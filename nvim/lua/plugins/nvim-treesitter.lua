@@ -15,6 +15,7 @@ return {
 					"lua",
 					"yaml",
 					"javascript",
+					"typescript",
 					"html",
 					"css",
 					"c",
@@ -22,9 +23,11 @@ return {
 				sync_install = false,
 				highlight = {
 					enable = true,
-					disable = { "nix", "lua", "rust" },
 				},
 				indent = { enable = true },
+			})
+			vim.filetype.add({
+				pattern = { [".*/hypr/.*%.conf"] = "hyprlang" },
 			})
 		end,
 	},

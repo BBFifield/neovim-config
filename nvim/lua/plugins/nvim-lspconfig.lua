@@ -140,7 +140,13 @@ return {
 					},
 				},
 			})
-
+			lspconfig.ts_ls.setup({})
+			lspconfig.jsonls.setup({
+				cmd = { "vscode-json-languageserver", "--stdio" },
+				init_options = {
+					provideFormatter = false,
+				},
+			})
 			lspconfig.nil_ls.setup({})
 		end,
 	},
@@ -156,6 +162,9 @@ return {
 				lua = { "stylua" },
 				css = { "prettierd" },
 				scss = { "prettierd" },
+				js = { "prettierd" },
+				ts = { "prettierd" },
+				json = { "prettierd" },
 				rs = { "rustfmt" },
 			},
 			format_on_save = {

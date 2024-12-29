@@ -18,19 +18,22 @@ return {
 					vim.api.nvim_set_hl(0, "NormalFloat", { fg = floatFg, bg = floatBg })
 				end,
 			})
-			local settings_path = vim.fn.expand("~/.config/tintednix/settings.txt")
+			local settings_file = vim.fn.expand("~/.config/tintednix/settings.txt")
+			local settings_dir = vim.fn.expand("~/.config/tintednix")
 			local config = {}
-			local file = io.open(settings_path, "r")
-			if file then
-				for line in file:lines() do
-					for key, value in string.gmatch(line, "([%a_]+)=([%w%p]+)") do
-						config[key] = value
+
+			local readFile = function()
+				local file = io.open(settings_file, "r")
+				if file then
+					for line in file:lines() do
+						for key, value in string.gmatch(line, "([%a_]+)=([%w%p]+)") do
+							config[key] = value
+						end
 					end
+					file:close()
 				end
-				file:close()
-			else
-				vim.g.colorscheme = "base16-catppuccin-frappe"
 			end
+			readFile()
 			if config.color_scheme then
 				vim.g.colorscheme = "base16-" .. config.color_scheme
 			else
@@ -45,27 +48,12 @@ return {
 			end
 
 			local fwatch = require("fwatch")
-			local watcher = nil -- Variable to hold the watcher
 
 			local function watch_settings()
-				if watcher then
-					fwatch.unwatch(watcher) -- Unwatch the existing watcher before re-attaching
-				end
-
-				watcher = fwatch.watch(settings_path, {
-					on_event = function()
+				fwatch.watch(settings_dir, {
+					on_event = function(filename, events, unwatch)
 						print("event triggered")
-						local file = io.open(settings_path, "r")
-						if file then
-							for line in file:lines() do
-								for key, value in string.gmatch(line, "([%a_]+)=([%w%p]+)") do
-									config[key] = value
-								end
-							end
-							file:close()
-						else
-							print("Error: Unable to open settings file")
-						end
+						readFile()
 
 						if config.color_scheme then
 							vim.schedule(function()
@@ -73,7 +61,6 @@ return {
 								-- Reload colors and update lualine
 								local colors = require("base16-colorscheme").colors
 								local theme = reload_custom_base16()
-								-- Reload the custom_base16 module
 								local build_lualine_config = require("plugins.lualine.config")
 								require("lualine").setup(build_lualine_config(colors, theme))
 								require("lualine").refresh()
@@ -81,9 +68,8 @@ return {
 						else
 							print("Error: 'color_scheme' not set in settings.txt")
 						end
-
-						-- Re-attach the watcher
 						watch_settings()
+						return unwatch()
 					end,
 				})
 			end
