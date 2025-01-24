@@ -147,7 +147,6 @@ local build_lualine_config = function(colors, theme)
 						color = { bg = colors.base0D, fg = colors.base01, gui = "bold" },
 						symbols = { modified = "%#file_modified#●" },
 						path = 1,
-						separator = { left = "", right = "" },
 						padding = 0,
 					},
 					{
@@ -155,6 +154,9 @@ local build_lualine_config = function(colors, theme)
 							return "%="
 						end,
 						color = { bg = "none", fg = "none" },
+						separator = {
+							left = "%#spacer_separator#",
+						},
 					},
 				},
 			},
@@ -218,14 +220,16 @@ local build_lualine_config = function(colors, theme)
 						color = { bg = colors.base02, fg = colors.base0D },
 						symbols = { modified = "%#file_modified_inactive_win#●" },
 						path = 1,
-						separator = { left = "", right = "%#spacer_separator_inactive_win#" },
 						padding = 0,
 					},
 					{
 						function()
 							return "%="
 						end,
-						color = { fg = "none", bg = "none" },
+						color = { bg = "none", fg = "none" },
+						separator = {
+							left = "%#spacer_separator_inactive_win#",
+						},
 					},
 				},
 			},

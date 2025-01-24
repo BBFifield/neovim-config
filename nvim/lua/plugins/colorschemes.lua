@@ -63,7 +63,7 @@ return {
 								local theme = reload_custom_base16()
 								local build_lualine_config = require("plugins.lualine.config")
 								require("lualine").setup(build_lualine_config(colors, theme))
-								require("lualine").refresh()
+								-- require("lualine").refresh() -- This was causing the file_modified highlight update in lualine.lua to not persist if the symbol was shown in the interface
 							end)
 						else
 							print("Error: 'color_scheme' not set in settings.txt")
