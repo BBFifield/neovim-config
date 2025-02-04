@@ -2,9 +2,6 @@
 
 This is my personalized neovim configuration, tailored to how I'd like an editor to mostly look and function.
 
-*Note: A lot of the default configuration currently depends on a custom theming utility I've been working on for NixOS called TintedNix, only located in my nix-config repo. I plan on releasing this utility in its own repo at some point in the future when I feel comfortable enough about its stability and base features. In the meantime, it is near the top of my todo list to have this configuration running smoothly out-of-the-box on nearly every system.*
-  
-
 ## Installation
 
 The configuration files themselves are located inside `./nvim` and set up is pretty trivial since all that needs to be done is a straight copy and paste to your neovim directory.
