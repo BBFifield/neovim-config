@@ -21,6 +21,7 @@ in
         ripgrep # For BurntSushi/ripgrep
         gcc # For installing treesitter parsers
         fd # For "additional functionalities" in telescope related to the finder
+        neo # For the alpha terminal theme
       ];
 
       # So the entire folder isn't linked to the nix store. This allows you add or replace individual files for testing without having to rebuild all the time.
