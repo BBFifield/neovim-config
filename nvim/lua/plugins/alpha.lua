@@ -40,9 +40,18 @@ return {
 		end
 		local buttons = { alpha_button("n", " " .. " New file", "<cmd> ene <BAR> startinsert <cr>") }
 		if NewfieVim:get_plugin_info("telescope").enabled then
-			table.insert(buttons, alpha_button("f", " " .. " Find file", builtin .. "find_files() <cr>"))
-			table.insert(buttons, alpha_button("r", " " .. " Recent files", builtin .. "oldfiles() <cr>"))
-			table.insert(buttons, alpha_button("g", " " .. " Find text", builtin .. "live_grep() <cr>"))
+			table.insert(
+				buttons,
+				alpha_button("f", " " .. " Find file", "<cmd> lua " .. builtin .. ".find_files() <cr>")
+			)
+			table.insert(
+				buttons,
+				alpha_button("r", " " .. " Recent files", "<cmd> lua " .. builtin .. ".oldfiles() <cr>")
+			)
+			table.insert(
+				buttons,
+				alpha_button("g", " " .. " Find text", "<cmd> lua " .. builtin .. ".live_grep() <cr>")
+			)
 			table.insert(
 				buttons,
 				alpha_button(
