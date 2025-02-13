@@ -19,6 +19,7 @@ return {
 					"html",
 					"css",
 					"c",
+					"json",
 				},
 				sync_install = false,
 				highlight = {
