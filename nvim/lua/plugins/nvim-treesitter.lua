@@ -16,6 +16,7 @@ return {
 					"yaml",
 					"javascript",
 					"typescript",
+					"tsx",
 					"html",
 					"css",
 					"c",
