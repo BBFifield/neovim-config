@@ -8,7 +8,7 @@ end
 
 local lsp_server = function()
 	local client_names = {}
-	for _, client in pairs(vim.lsp.buf_get_clients()) do
+	for _, client in pairs(vim.lsp.get_clients()) do
 		table.insert(client_names, client.name)
 	end
 	return table.concat(client_names, ", ")
@@ -23,6 +23,11 @@ local function diff_source()
 			removed = gitsigns.removed,
 		}
 	end
+end
+
+local formatter_component = function()
+	local formatters = require("conform").list_formatters_for_buffer(vim.api.nvim_get_current_buf())
+	return formatters[1]
 end
 
 local build_lualine_config = function(colors, theme)
@@ -188,7 +193,14 @@ local build_lualine_config = function(colors, theme)
 					{
 						lsp_server,
 						cond = function()
-							return next(vim.lsp.buf_get_clients()) ~= nil
+							return next(vim.lsp.get_clients()) ~= nil
+						end,
+					},
+					{
+						formatter_component,
+						cond = function()
+							return next(require("conform").list_formatters_for_buffer(vim.api.nvim_get_current_buf()))
+								~= nil
 						end,
 					},
 					"encoding",

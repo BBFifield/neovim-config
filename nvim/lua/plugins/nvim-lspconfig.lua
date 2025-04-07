@@ -162,10 +162,10 @@ return {
 				lua = { "stylua" },
 				css = { "prettierd" },
 				scss = { "prettierd" },
-				js = { "prettierd" },
-				ts = { "prettierd" },
+				javascript = { "prettierd" },
+				typescript = { "prettierd" },
 				json = { "prettierd" },
-				rs = { "rustfmt" },
+				rust = { "rustfmt" },
 			},
 			format_on_save = {
 				-- I recommend these options. See :help conform.format for details.
