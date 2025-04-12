@@ -69,11 +69,30 @@ return {
 				},
 			})
 
-			local signs = { Error = "", Warn = "", Hint = "󰌶", Info = "" }
-			for type, icon in pairs(signs) do
-				local hl = "DiagnosticSign" .. type
-				vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+			local severity = vim.diagnostic.severity
+			local symbols = {
+				[severity.ERROR] = "",
+				[severity.WARN] = "",
+				[severity.HINT] = "󰌶",
+				[severity.INFO] = "",
+			}
+
+			local highlights = {
+				[severity.ERROR] = "DiagnosticError",
+				[severity.WARN] = "DiagnosticWarn",
+				[severity.HINT] = "DiagnosticHint",
+				[severity.INFO] = "DiagnosticInfo",
+			}
+
+			local signs = { text = {}, linehl = {}, numhl = {} }
+
+			for level, symbol in pairs(symbols) do
+				signs.text[level] = symbol
+				signs.linehl[level] = highlights[level]
+				signs.numhl[level] = highlights[level]
 			end
+
+			vim.diagnostic.config({ signs = signs })
 
 			lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
 				capabilities = vim.tbl_deep_extend(
