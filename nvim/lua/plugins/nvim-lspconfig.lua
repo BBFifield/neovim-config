@@ -88,11 +88,11 @@ return {
 
 			for level, symbol in pairs(symbols) do
 				signs.text[level] = symbol
-				signs.linehl[level] = highlights[level]
+				-- signs.linehl[level] = highlights[level]
 				signs.numhl[level] = highlights[level]
 			end
 
-			vim.diagnostic.config({ signs = signs })
+			vim.diagnostic.config({ virtual_text = true, signs = signs })
 
 			lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
 				capabilities = vim.tbl_deep_extend(
