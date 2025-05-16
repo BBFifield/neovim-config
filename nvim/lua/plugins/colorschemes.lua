@@ -35,7 +35,13 @@ return {
 			end
 			readFile()
 			if config.color_scheme then
-				vim.g.colorscheme = "base16-" .. config.color_scheme
+				local theme = "base16-" .. config.color_scheme
+				if string.find(config.color_scheme, "ros%-pine-moon") then
+					theme = "base16-rose-pine-moon"
+				elseif string.find(config.color_scheme, "ros%-pine") then
+					theme = "base16-rose-pine"
+				end
+				vim.g.colorscheme = theme
 			else
 				vim.g.colorscheme = "base16-catppuccin-frappe"
 			end
@@ -57,7 +63,13 @@ return {
 
 						if config.color_scheme then
 							vim.schedule(function()
-								vim.cmd.colorscheme("base16-" .. config.color_scheme)
+								local theme = "base16-" .. config.color_scheme
+								if string.find(config.color_scheme, "ros%-pine-moon") then
+									theme = "base16-rose-pine-moon"
+								elseif string.find(config.color_scheme, "ros%-pine") then
+									theme = "base16-rose-pine"
+								end
+								vim.cmd.colorscheme(theme)
 								-- Reload colors and update lualine
 								local colors = require("base16-colorscheme").colors
 								local theme = reload_custom_base16()
