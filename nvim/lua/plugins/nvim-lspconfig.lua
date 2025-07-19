@@ -199,7 +199,67 @@ return {
 			})
 		end,
 	},
+	{
+		"mfussenegger/nvim-lint",
+		opts = {
+			events = { "BufWritePost", "BufReadPost", "InsertLeave" },
+			linters_by_ft = {
+				css = { "stylelint" },
+			},
+		},
+		config = function(_, opts)
+			local lint = require("lint")
+			lint.linters_by_ft = opts.linters_by_ft
 
+			-- the actual linter runner
+			local function run_lint()
+				lint.try_lint()
+			end
+
+			-- debounce helper with nil-guards around timer methods
+			local function debounce(ms, fn)
+				local timer
+				return function(...)
+					local args = { ... }
+
+					-- cancel and close any existing timer
+					if timer then
+						timer:stop()
+						timer:close()
+					end
+
+					-- create a new timer
+					timer = vim.loop.new_timer()
+					if not timer then
+						return
+					end
+
+					-- start the timer
+					timer:start(ms, 0, function()
+						-- schedule the actual lint run on Vim’s main loop
+						vim.schedule(function()
+							fn(unpack(args))
+						end)
+
+						-- safely stop and close the timer
+						if timer then
+							timer:stop()
+							timer:close()
+						end
+						timer = nil
+					end)
+				end
+			end
+
+			-- create/clear augroup
+			local group = vim.api.nvim_create_augroup("nvim-lint", { clear = true })
+			-- wire up the autocmd with your debounced runner
+			vim.api.nvim_create_autocmd(opts.events, {
+				group = group,
+				callback = debounce(100, run_lint),
+			})
+		end,
+	},
 	{
 		{
 			"folke/lazydev.nvim",

@@ -72,7 +72,7 @@ return {
 								vim.cmd.colorscheme(theme)
 								-- Reload colors and update lualine
 								local colors = require("base16-colorscheme").colors
-								local theme = reload_custom_base16()
+								theme = reload_custom_base16()
 								local build_lualine_config = require("plugins.lualine.config")
 								require("lualine").setup(build_lualine_config(colors, theme))
 								-- require("lualine").refresh() -- This was causing the file_modified highlight update in lualine.lua to not persist if the symbol was shown in the interface
