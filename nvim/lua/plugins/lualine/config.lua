@@ -30,9 +30,12 @@ local formatter_component = function()
 	return formatters[1]
 end
 
-local linter_component = function()
-	local linters = require("lint").get_running(vim.api.nvim_get_current_buf())
-	return linters[1]
+local lint_progress = function()
+	local linters = require("lint").get_running()
+	if #linters == 0 then
+		return "󰦕"
+	end
+	return "󱉶 " .. table.concat(linters, ", ")
 end
 
 local build_lualine_config = function(colors, theme)
@@ -209,7 +212,7 @@ local build_lualine_config = function(colors, theme)
 						end,
 					},
 					{
-						linter_component,
+						lint_progress,
 						cond = function()
 							return next(require("lint").get_running(vim.api.nvim_get_current_buf())) ~= nil
 						end,

@@ -8,6 +8,8 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 	end,
 })
 
+local home = os.getenv("HOME") -- dynamically inserted in arg in linter
+
 return {
 	{
 		"folke/neoconf.nvim",
@@ -201,15 +203,43 @@ return {
 	},
 	{
 		"mfussenegger/nvim-lint",
+		enabled = function()
+			return NewfieVim:get_plugin_info("lsp_config").enabled
+		end,
 		opts = {
 			events = { "BufWritePost", "BufReadPost", "InsertLeave" },
 			linters_by_ft = {
 				css = { "stylelint" },
 			},
+			linters = {
+				stylelint = {
+					stdin = false,
+					args = {
+						"--formatter",
+						"json",
+						"--config",
+						string.format("%s/.config/stylelint.config.js", home),
+						"$FILENAME",
+					},
+				},
+			},
 		},
 		config = function(_, opts)
 			local lint = require("lint")
+
 			lint.linters_by_ft = opts.linters_by_ft
+
+			for name, linter in pairs(opts.linters) do
+				if type(linter) == "table" and type(lint.linters[name]) == "table" then
+					lint.linters[name] = vim.tbl_deep_extend("force", lint.linters[name], linter)
+					if type(linter.prepend_args) == "table" then
+						lint.linters[name].args = lint.linters[name].args or {}
+						vim.list_extend(lint.linters[name].args, linter.prepend_args)
+					end
+				else
+					lint.linters[name] = linter
+				end
+			end
 
 			-- the actual linter runner
 			local function run_lint()
