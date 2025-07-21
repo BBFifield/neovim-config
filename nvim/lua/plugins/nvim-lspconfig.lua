@@ -8,8 +8,6 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 	end,
 })
 
-local home = os.getenv("HOME") -- dynamically inserted in arg in linter
-
 return {
 	{
 		"folke/neoconf.nvim",
@@ -207,7 +205,7 @@ return {
 			return NewfieVim:get_plugin_info("lsp_config").enabled
 		end,
 		opts = {
-			events = { "BufWritePost", "BufReadPost", "InsertLeave" },
+			events = { "BufWritePost", "BufReadPost" },
 			linters_by_ft = {
 				css = { "stylelint" },
 			},
@@ -218,7 +216,7 @@ return {
 						"--formatter",
 						"json",
 						"--config",
-						string.format("%s/.config/stylelint.config.js", home),
+						vim.fn.expand("$HOME/.config/stylelint.config.js"),
 						"$FILENAME",
 					},
 				},
@@ -377,8 +375,39 @@ return {
 				callback = debounce(100, run_lint),
 			})
 
+			local function fix()
+				local file = vim.api.nvim_buf_get_name(0)
+				local cmd = {
+					"stylelint",
+					"--formatter",
+					"json",
+					"--config",
+					vim.fn.expand("$HOME/.config/stylelint.config.js"),
+					"--fix",
+					file,
+				}
+
+				vim.fn.jobstart(cmd, {
+					cwd = vim.fn.getcwd(),
+					stdout_buffered = true,
+					stderr_buffered = true,
+					on_exit = function(_, code)
+						if code <= 2 then
+							vim.notify("stylelint --fix applied (exit code " .. code .. ")", vim.log.levels.INFO)
+							vim.cmd("edit!") -- always reload so you see any changes
+						else
+							vim.notify("stylelint --fix failed (exit code " .. code .. ")", vim.log.levels.ERROR)
+						end
+					end,
+				})
+			end
+
+			wk.add({ "<leader>ll", group = "Lint", icon = "󰝔" })
 			wk.add({
-				{ "<leader>ll", "<cmd>lua require('lint').try_lint()<CR>", icon = "󰝔", desc = "Run linter" },
+				{ "<leader>lls", run_lint, icon = "󰝔", desc = "Linter scan" },
+			})
+			wk.add({
+				{ "<leader>llf", fix, icon = "󰝔", desc = "Linter fix" },
 			})
 		end,
 	},
@@ -402,7 +431,17 @@ return {
 			version = "v0.7.6",
 			--build = "nix run .#build-plugin",
 			opts = {
-				keymap = { preset = "enter" },
+				keymap = {
+					-- set to 'none' to disable the 'default' preset
+					preset = "default",
+					["<Up>"] = {},
+					["<Down>"] = {},
+					["<Left>"] = {},
+					["<Right>"] = {},
+					["<C-p>"] = { "select_prev", "fallback" },
+					["<C-n>"] = { "select_next", "fallback" },
+				},
+				-- keymap = { preset = "enter" },
 				appearance = {
 					-- Sets the fallback highlight groups to nvim-cmp's highlight groups
 					-- Useful for when your theme doesn't support blink.cmp
@@ -412,6 +451,9 @@ return {
 					-- Adjusts spacing to ensure icons are aligned
 					nerd_font_variant = "mono",
 				},
+				completion = { ghost_text = {
+					enabled = true,
+				} },
 				sources = {
 					-- add lazydev to your completion providers
 					default = { "lsp", "path", "snippets", "buffer", "lazydev" },
