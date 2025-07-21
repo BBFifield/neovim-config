@@ -241,9 +241,97 @@ return {
 				end
 			end
 
-			-- the actual linter runner
+			local function safe_timer_run(steps, interval)
+				local timer, idx = vim.loop.new_timer(), 1
+				if not timer then
+					return
+				end
+
+				timer:start(
+					0,
+					interval,
+					vim.schedule_wrap(function()
+						local fn = steps[idx]
+						if not fn then
+							if timer then
+								timer:stop()
+								timer:close()
+								timer = nil
+							end
+							return
+						end
+
+						fn()
+						idx = idx + 1
+					end)
+				)
+			end
+
 			local function run_lint()
+				local lint = require("lint")
+				local fp = require("fidget.progress")
+				local ft = vim.bo.filetype
+				local linters = lint.linters_by_ft[ft] or {}
+				if #linters == 0 then
+					return
+				end
+
+				-- fire them all on the current buffer
 				lint.try_lint()
+
+				vim.defer_fn(
+					vim.schedule_wrap(function()
+						local running = lint.get_running()
+						local active = {}
+						for _, name in ipairs(linters) do
+							if running[name] then
+								table.insert(active, name)
+							end
+						end
+						if #active == 0 then
+							vim.list_extend(active, linters)
+						end
+						table.sort(active)
+
+						local handle = fp.handle.create({
+							key = "nvim_lint",
+							title = "Linting " .. ft .. "…",
+							spinner = "dots",
+						})
+
+						-- build descriptor-tables
+						local descs = {
+							{ title = "Scanning buffer…", pct = 10 },
+						}
+						for i, name in ipairs(active) do
+							descs[#descs + 1] = {
+								title = ("Running %s…"):format(name:sub(1, 1):upper() .. name:sub(2)),
+								pct = math.floor(10 + (i / #active) * 80),
+								linter = name,
+							}
+						end
+						descs[#descs + 1] = { title = "Finalizing results…", pct = 95 }
+						descs[#descs + 1] = { finish = true }
+
+						-- wrap each descriptor into a function
+						local fns = {}
+						for _, d in ipairs(descs) do
+							table.insert(fns, function()
+								if d.finish then
+									handle:finish()
+								else
+									handle:report({ title = d.title, percentage = d.pct })
+									-- optional: rerun only this linter
+									-- lint.try_lint(d.linter)
+								end
+							end)
+						end
+
+						-- now drive them 500ms apart
+						safe_timer_run(fns, 500)
+					end),
+					50
+				)
 			end
 
 			-- debounce helper with nil-guards around timer methods
@@ -287,6 +375,10 @@ return {
 			vim.api.nvim_create_autocmd(opts.events, {
 				group = group,
 				callback = debounce(100, run_lint),
+			})
+
+			wk.add({
+				{ "<leader>ll", "<cmd>lua require('lint').try_lint()<CR>", icon = "󰝔", desc = "Run linter" },
 			})
 		end,
 	},
