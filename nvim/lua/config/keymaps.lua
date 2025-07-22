@@ -30,6 +30,8 @@ local create_register_keymaps = function()
 end
 
 local keymaps = {
+	{ "n", "n", "nzz", { desc = "Center screen after next search match", silent = true } },
+	{ "n", "<S-n>", "<S-n>zz", { desc = "Center screen after previous search match", silent = true } },
 	{ "n", "<M-j>", ":m .+1<CR>", { desc = "Swap line down", silent = true } },
 	{ "v", "<M-j>", ":m '>+1<CR>gv", { desc = "Swap lines down", silent = true } },
 	{ "n", "<M-k>", ":m .-2<CR>", { desc = "Swap line up", silent = true } },

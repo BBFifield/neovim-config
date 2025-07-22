@@ -14,6 +14,11 @@ return {
 					if NewfieVim:get_plugin_info("yazi").enabled then
 						vim.api.nvim_set_hl(0, "YaziFloat", { fg = floatFg, bg = floatBg })
 					end
+					-- blink.cmp
+					vim.api.nvim_set_hl(0, "BlinkCmpMenuSelection", { fg = colors.base01, bg = floatFg })
+					vim.api.nvim_set_hl(0, "BlinkCmpGhostText", { fg = colors.base03 })
+					vim.api.nvim_set_hl(0, "IncSearch", { fg = colors.base01, bg = colors.base09 })
+					vim.api.nvim_set_hl(0, "CurSearch", { fg = colors.base01, bg = colors.base09 })
 					vim.api.nvim_set_hl(0, "FloatBorder", { fg = floatFg, bg = floatBg })
 					vim.api.nvim_set_hl(0, "NormalFloat", { fg = floatFg, bg = floatBg })
 				end,
