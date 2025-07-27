@@ -176,10 +176,22 @@ return {
 		end,
 		version = "*",
 		opts = {
+			formatters = {
+				prettierdcss = {
+					command = "prettierd",
+					args = {
+						"--stdin-from-filename",
+						"$FILENAME",
+						"--print-width=200", --Don't new line long selectors
+					},
+					stdin = true,
+					inherit = true,
+				},
+			},
 			formatters_by_ft = {
 				nix = { "alejandra" },
 				lua = { "stylua" },
-				css = { "prettierd" },
+				css = { "prettierdcss" },
 				scss = { "prettierd" },
 				javascript = { "prettierd" },
 				typescript = { "prettierd" },
